@@ -1,9 +1,21 @@
 import { config as dotenvConfig } from 'dotenv';
 import { z } from 'zod';
 import path from 'path';
+import fs from 'fs';
 
-// Load environment variables
-dotenvConfig({ path: path.resolve(__dirname, '../../.env') });
+// Load environment variables - try .env first, then .env.local
+// Use process.cwd() which works in both ESM and CJS contexts
+const envPath = path.resolve(process.cwd(), '.env');
+const envLocalPath = path.resolve(process.cwd(), '.env.local');
+
+if (fs.existsSync(envPath)) {
+  dotenvConfig({ path: envPath });
+} else if (fs.existsSync(envLocalPath)) {
+  dotenvConfig({ path: envLocalPath });
+} else {
+  // Try default .env loading
+  dotenvConfig();
+}
 
 /**
  * Environment configuration schema with validation

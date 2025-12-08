@@ -91,14 +91,14 @@ router.get('/orders/:orderId', authenticate, async (req: Request, res: Response,
     }
 
     // Get fresh status from Paycrest
-    const order = await paycrestService.getOrder(orderId);
+    const order = await paycrestService.getOrder(orderId!);
 
-    res.json({
+    return res.json({
       success: true,
       data: order,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
@@ -156,9 +156,9 @@ router.get('/rates/:token/:amount/:currency', async (req: Request, res: Response
     const { network } = req.query;
 
     const rate = await paycrestService.getRate(
-      token,
-      parseFloat(amount),
-      currency,
+      token!,
+      parseFloat(amount!),
+      currency!,
       network as string | undefined
     );
 
@@ -166,7 +166,7 @@ router.get('/rates/:token/:amount/:currency', async (req: Request, res: Response
       success: true,
       data: {
         token,
-        amount: parseFloat(amount),
+        amount: parseFloat(amount!),
         currency,
         rate,
         network: network || 'default',
@@ -212,7 +212,7 @@ router.get('/institutions/:currency', async (req: Request, res: Response, next: 
   try {
     const { currency } = req.params;
 
-    const institutions = await paycrestService.getInstitutions(currency);
+    const institutions = await paycrestService.getInstitutions(currency!);
 
     res.json({
       success: true,

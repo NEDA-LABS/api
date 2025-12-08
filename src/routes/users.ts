@@ -8,7 +8,7 @@ const router = Router();
  * @desc  List all users with pagination (admin only)
  * @access Admin
  */
-router.get('/', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement list users with pagination
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.get('/', authenticate, requireAdmin, async (req, res, next) => {
  * @desc  Get user by ID
  * @access Admin
  */
-router.get('/:id', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/:id', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement get user by ID
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.get('/:id', authenticate, requireAdmin, async (req, res, next) => {
  * @desc  Update current user profile
  * @access Private
  */
-router.put('/me', authenticate, async (req, res, next) => {
+router.put('/me', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement update profile
     res.status(501).json({ message: 'Not implemented' });
@@ -50,7 +50,7 @@ router.put('/me', authenticate, async (req, res, next) => {
  * @desc  Deactivate user (admin only)
  * @access Admin
  */
-router.post('/:id/deactivate', authenticate, requireAdmin, async (req, res, next) => {
+router.post('/:id/deactivate', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement deactivate user
     res.status(501).json({ message: 'Not implemented' });
@@ -64,7 +64,7 @@ router.post('/:id/deactivate', authenticate, requireAdmin, async (req, res, next
  * @desc  Reactivate user (admin only)
  * @access Admin
  */
-router.post('/:id/reactivate', authenticate, requireAdmin, async (req, res, next) => {
+router.post('/:id/reactivate', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement reactivate user
     res.status(501).json({ message: 'Not implemented' });

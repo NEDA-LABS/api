@@ -115,7 +115,7 @@ export const errorHandler: ErrorRequestHandler = (
       message: error.message,
       statusCode: error.statusCode,
       ...(error.details && config.isDev && { details: error.details }),
-      ...('fields' in error && error.fields && { fields: error.fields }),
+      ...((error instanceof ValidationError && error.fields) && { fields: error.fields }),
     },
     timestamp: new Date().toISOString(),
     requestId: req.requestId,

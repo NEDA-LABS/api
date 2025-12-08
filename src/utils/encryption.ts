@@ -21,7 +21,7 @@ const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 12; // 96 bits for GCM (recommended by NIST)
 const AUTH_TAG_LENGTH = 16; // 128 bits
 const KEY_LENGTH = 32; // 256 bits for AES-256
-const SALT_LENGTH = 32; // Reserved for key derivation
+// const SALT_LENGTH = 32; // Reserved for key derivation
 const PBKDF2_ITERATIONS = 100000;
 
 // Key context identifiers for different encryption purposes

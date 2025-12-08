@@ -8,7 +8,7 @@ const router = Router();
  * @desc  Sync user from Privy authentication
  * @access Private
  */
-router.post('/sync', authenticate, async (req, res, next) => {
+router.post('/sync', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement user sync from Privy
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.post('/sync', authenticate, async (req, res, next) => {
  * @desc  Get current authenticated user
  * @access Private
  */
-router.get('/me', authenticate, async (req, res, next) => {
+router.get('/me', authenticate, async (_req, res, next) => {
   try {
     // TODO: Return current user
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.get('/me', authenticate, async (req, res, next) => {
  * @desc  Verify Privy token
  * @access Public
  */
-router.post('/verify-token', async (req, res, next) => {
+router.post('/verify-token', async (_req, res, next) => {
   try {
     // TODO: Verify token
     res.status(501).json({ message: 'Not implemented' });

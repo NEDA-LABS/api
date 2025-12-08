@@ -8,7 +8,7 @@ const router = Router();
  * @desc  Get user's merchant settings
  * @access Private
  */
-router.get('/', authenticate, async (req, res, next) => {
+router.get('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get settings
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.get('/', authenticate, async (req, res, next) => {
  * @desc  Update merchant settings
  * @access Private
  */
-router.put('/', authenticate, async (req, res, next) => {
+router.put('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement update settings
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.put('/', authenticate, async (req, res, next) => {
  * @desc  Get user's API keys
  * @access Private
  */
-router.get('/api-keys', authenticate, async (req, res, next) => {
+router.get('/api-keys', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get API keys
     res.status(501).json({ message: 'Not implemented' });
@@ -50,7 +50,7 @@ router.get('/api-keys', authenticate, async (req, res, next) => {
  * @desc  Create new API key
  * @access Private
  */
-router.post('/api-keys', authenticate, async (req, res, next) => {
+router.post('/api-keys', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement create API key
     res.status(501).json({ message: 'Not implemented' });
@@ -64,7 +64,7 @@ router.post('/api-keys', authenticate, async (req, res, next) => {
  * @desc  Revoke API key
  * @access Private
  */
-router.delete('/api-keys/:id', authenticate, async (req, res, next) => {
+router.delete('/api-keys/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement revoke API key
     res.status(501).json({ message: 'Not implemented' });

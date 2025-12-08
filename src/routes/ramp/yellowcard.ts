@@ -12,7 +12,7 @@ const router = Router();
  * @desc  Get Yellow Card onboarding status
  * @access Private
  */
-router.get('/status', authenticate, async (req, res, next) => {
+router.get('/status', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get status
     res.status(501).json({ message: 'Not implemented' });
@@ -26,7 +26,7 @@ router.get('/status', authenticate, async (req, res, next) => {
  * @desc  Get available payment channels
  * @access Private
  */
-router.get('/channels', authenticate, async (req, res, next) => {
+router.get('/channels', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get channels
     res.status(501).json({ message: 'Not implemented' });
@@ -40,7 +40,7 @@ router.get('/channels', authenticate, async (req, res, next) => {
  * @desc  Get available networks
  * @access Private
  */
-router.get('/networks', authenticate, async (req, res, next) => {
+router.get('/networks', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get networks
     res.status(501).json({ message: 'Not implemented' });
@@ -54,7 +54,7 @@ router.get('/networks', authenticate, async (req, res, next) => {
  * @desc  Get exchange rates
  * @access Private
  */
-router.get('/rates', authenticate, async (req, res, next) => {
+router.get('/rates', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get rates
     res.status(501).json({ message: 'Not implemented' });
@@ -68,7 +68,7 @@ router.get('/rates', authenticate, async (req, res, next) => {
  * @desc  Get user's bank accounts
  * @access Private
  */
-router.get('/bank-accounts', authenticate, async (req, res, next) => {
+router.get('/bank-accounts', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get bank accounts
     res.status(501).json({ message: 'Not implemented' });
@@ -82,7 +82,7 @@ router.get('/bank-accounts', authenticate, async (req, res, next) => {
  * @desc  Add a bank account
  * @access Private
  */
-router.post('/bank-accounts', authenticate, async (req, res, next) => {
+router.post('/bank-accounts', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement add bank account
     res.status(501).json({ message: 'Not implemented' });
@@ -96,7 +96,7 @@ router.post('/bank-accounts', authenticate, async (req, res, next) => {
  * @desc  Create off-ramp transaction
  * @access Private
  */
-router.post('/offramp', authenticate, async (req, res, next) => {
+router.post('/offramp', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement off-ramp
     res.status(501).json({ message: 'Not implemented' });
@@ -110,7 +110,7 @@ router.post('/offramp', authenticate, async (req, res, next) => {
  * @desc  Get user's Yellow Card transactions
  * @access Private
  */
-router.get('/transactions', authenticate, async (req, res, next) => {
+router.get('/transactions', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get transactions
     res.status(501).json({ message: 'Not implemented' });
@@ -124,7 +124,7 @@ router.get('/transactions', authenticate, async (req, res, next) => {
  * @desc  Get transaction by ID
  * @access Private
  */
-router.get('/transactions/:id', authenticate, async (req, res, next) => {
+router.get('/transactions/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get transaction
     res.status(501).json({ message: 'Not implemented' });
@@ -142,7 +142,7 @@ router.get('/transactions/:id', authenticate, async (req, res, next) => {
  * @desc  Onboard user to Yellow Card (admin only)
  * @access Admin
  */
-router.post('/admin/onboard', authenticate, requireAdmin, async (req, res, next) => {
+router.post('/admin/onboard', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement admin onboard
     res.status(501).json({ message: 'Not implemented' });

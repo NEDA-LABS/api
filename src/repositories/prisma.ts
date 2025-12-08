@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { log } from '../utils/logger.js';
 import { config } from '../config/index.js';
 
@@ -7,48 +9,48 @@ import { config } from '../config/index.js';
  * 
  * Prevents multiple instances during development with hot reloading.
  * Uses connection pooling for production.
+ * Prisma 7 requires an adapter for the "client" engine type.
  */
 
-// Extend global to hold prisma instance
+// Extend global to hold prisma instance and pool
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  pool: Pool | undefined;
 };
 
 /**
- * Create Prisma client with logging configuration
+ * Create PostgreSQL connection pool
  */
-function createPrismaClient(): PrismaClient {
+function createPool(): Pool {
+  return new Pool({
+    connectionString: config.database.url,
+  });
+}
+
+/**
+ * Create Prisma client with adapter and logging configuration
+ */
+function createPrismaClient(pool: Pool): PrismaClient {
+  const adapter = new PrismaPg(pool);
+  
   return new PrismaClient({
+    adapter,
     log: config.isDev
-      ? [
-          { emit: 'event', level: 'query' },
-          { emit: 'event', level: 'error' },
-          { emit: 'event', level: 'warn' },
-        ]
-      : [{ emit: 'event', level: 'error' }],
+      ? ['query', 'error', 'warn']
+      : ['error'],
   });
 }
 
 /**
  * Get or create Prisma client instance
  */
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+const pool = globalForPrisma.pool ?? createPool();
+export const prisma = globalForPrisma.prisma ?? createPrismaClient(pool);
 
-// Log queries in development
-if (config.isDev) {
-  prisma.$on('query' as never, (e: { query: string; duration: number }) => {
-    log.db('query', e.query, { duration: `${e.duration}ms` });
-  });
-}
-
-// Log errors
-prisma.$on('error' as never, (e: { message: string }) => {
-  log.error('Prisma error', new Error(e.message));
-});
-
-// Store instance in global for development
+// Store instances in global for development (prevents multiple instances during HMR)
 if (!config.isProd) {
   globalForPrisma.prisma = prisma;
+  globalForPrisma.pool = pool;
 }
 
 /**

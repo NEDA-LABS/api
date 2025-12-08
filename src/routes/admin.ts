@@ -15,7 +15,7 @@ router.use(authenticate, requireAdmin);
  * @desc  Get admin settings
  * @access Admin
  */
-router.get('/settings', async (req, res, next) => {
+router.get('/settings', async (_req, res, next) => {
   try {
     // TODO: Implement get admin settings
     res.status(501).json({ message: 'Not implemented' });
@@ -29,7 +29,7 @@ router.get('/settings', async (req, res, next) => {
  * @desc  Update admin settings
  * @access Admin
  */
-router.put('/settings', async (req, res, next) => {
+router.put('/settings', async (_req, res, next) => {
   try {
     // TODO: Implement update admin settings
     res.status(501).json({ message: 'Not implemented' });
@@ -43,7 +43,7 @@ router.put('/settings', async (req, res, next) => {
  * @desc  Get bank withdrawal settings
  * @access Admin
  */
-router.get('/settings/bank-withdrawals', async (req, res, next) => {
+router.get('/settings/bank-withdrawals', async (_req, res, next) => {
   try {
     // TODO: Implement get bank withdrawal settings
     res.status(501).json({ message: 'Not implemented' });
@@ -57,7 +57,7 @@ router.get('/settings/bank-withdrawals', async (req, res, next) => {
  * @desc  Update bank withdrawal settings
  * @access Admin
  */
-router.put('/settings/bank-withdrawals', async (req, res, next) => {
+router.put('/settings/bank-withdrawals', async (_req, res, next) => {
   try {
     // TODO: Implement update bank withdrawal settings
     res.status(501).json({ message: 'Not implemented' });
@@ -75,7 +75,7 @@ router.put('/settings/bank-withdrawals', async (req, res, next) => {
  * @desc  List all transactions
  * @access Admin
  */
-router.get('/transactions', async (req, res, next) => {
+router.get('/transactions', async (_req, res, next) => {
   try {
     // TODO: Implement list all transactions
     res.status(501).json({ message: 'Not implemented' });
@@ -89,7 +89,7 @@ router.get('/transactions', async (req, res, next) => {
  * @desc  Get Paycrest orders
  * @access Admin
  */
-router.get('/paycrest-orders', async (req, res, next) => {
+router.get('/paycrest-orders', async (_req, res, next) => {
   try {
     // TODO: Implement get paycrest orders
     res.status(501).json({ message: 'Not implemented' });
@@ -107,7 +107,7 @@ router.get('/paycrest-orders', async (req, res, next) => {
  * @desc  Get influencer earnings
  * @access Admin
  */
-router.get('/disbursement/earnings', async (req, res, next) => {
+router.get('/disbursement/earnings', async (_req, res, next) => {
   try {
     // TODO: Implement get earnings
     res.status(501).json({ message: 'Not implemented' });
@@ -121,7 +121,7 @@ router.get('/disbursement/earnings', async (req, res, next) => {
  * @desc  Record a disbursement
  * @access Admin
  */
-router.post('/disbursement/record', async (req, res, next) => {
+router.post('/disbursement/record', async (_req, res, next) => {
   try {
     // TODO: Implement record disbursement
     res.status(501).json({ message: 'Not implemented' });
@@ -135,7 +135,7 @@ router.post('/disbursement/record', async (req, res, next) => {
  * @desc  Get token info for disbursement
  * @access Admin
  */
-router.get('/disbursement/token-info', async (req, res, next) => {
+router.get('/disbursement/token-info', async (_req, res, next) => {
   try {
     // TODO: Implement get token info
     res.status(501).json({ message: 'Not implemented' });
@@ -153,7 +153,7 @@ router.get('/disbursement/token-info', async (req, res, next) => {
  * @desc  Set manual IDRX credentials for user
  * @access Admin
  */
-router.post('/idrx/manual-credentials', async (req, res, next) => {
+router.post('/idrx/manual-credentials', async (_req, res, next) => {
   try {
     // TODO: Implement manual credentials
     res.status(501).json({ message: 'Not implemented' });
@@ -167,7 +167,7 @@ router.post('/idrx/manual-credentials', async (req, res, next) => {
  * @desc  Verify admin password for sensitive operations
  * @access Admin
  */
-router.post('/verify-password', async (req, res, next) => {
+router.post('/verify-password', async (_req, res, next) => {
   try {
     // TODO: Implement verify password
     res.status(501).json({ message: 'Not implemented' });

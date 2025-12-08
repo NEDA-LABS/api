@@ -8,7 +8,7 @@ const router = Router();
  * @desc  List user's payment links
  * @access Private
  */
-router.get('/', authenticate, async (req, res, next) => {
+router.get('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement list payment links
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.get('/', authenticate, async (req, res, next) => {
  * @desc  Create a new payment link
  * @access Private
  */
-router.post('/', authenticate, async (req, res, next) => {
+router.post('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement create payment link
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.post('/', authenticate, async (req, res, next) => {
  * @desc  Get payment link by ID
  * @access Private
  */
-router.get('/:id', authenticate, async (req, res, next) => {
+router.get('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get payment link
     res.status(501).json({ message: 'Not implemented' });
@@ -50,7 +50,7 @@ router.get('/:id', authenticate, async (req, res, next) => {
  * @desc  Update payment link
  * @access Private
  */
-router.put('/:id', authenticate, async (req, res, next) => {
+router.put('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement update payment link
     res.status(501).json({ message: 'Not implemented' });
@@ -64,7 +64,7 @@ router.put('/:id', authenticate, async (req, res, next) => {
  * @desc  Delete payment link
  * @access Private
  */
-router.delete('/:id', authenticate, async (req, res, next) => {
+router.delete('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement delete payment link
     res.status(501).json({ message: 'Not implemented' });
@@ -78,7 +78,7 @@ router.delete('/:id', authenticate, async (req, res, next) => {
  * @desc  Get payment link by public link ID (for payers)
  * @access Public
  */
-router.get('/public/:linkId', async (req, res, next) => {
+router.get('/public/:linkId', async (_req, res, next) => {
   try {
     // TODO: Implement get public payment link
     res.status(501).json({ message: 'Not implemented' });

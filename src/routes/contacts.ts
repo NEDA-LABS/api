@@ -9,7 +9,7 @@ const router = Router();
  * @access Private
  * @query page, limit, search, favorite
  */
-router.get('/', authenticate, async (req, res, next) => {
+router.get('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement list contacts
     res.status(501).json({ message: 'Not implemented' });
@@ -23,7 +23,7 @@ router.get('/', authenticate, async (req, res, next) => {
  * @desc  Create a new contact
  * @access Private
  */
-router.post('/', authenticate, async (req, res, next) => {
+router.post('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement create contact
     res.status(501).json({ message: 'Not implemented' });
@@ -37,7 +37,7 @@ router.post('/', authenticate, async (req, res, next) => {
  * @desc  Search for NedaPay user to add as contact
  * @access Private
  */
-router.get('/search-user', authenticate, async (req, res, next) => {
+router.get('/search-user', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement search user
     res.status(501).json({ message: 'Not implemented' });
@@ -51,7 +51,7 @@ router.get('/search-user', authenticate, async (req, res, next) => {
  * @desc  Get contact by ID
  * @access Private
  */
-router.get('/:id', authenticate, async (req, res, next) => {
+router.get('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get contact
     res.status(501).json({ message: 'Not implemented' });
@@ -65,7 +65,7 @@ router.get('/:id', authenticate, async (req, res, next) => {
  * @desc  Update contact
  * @access Private
  */
-router.put('/:id', authenticate, async (req, res, next) => {
+router.put('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement update contact
     res.status(501).json({ message: 'Not implemented' });
@@ -79,7 +79,7 @@ router.put('/:id', authenticate, async (req, res, next) => {
  * @desc  Delete contact
  * @access Private
  */
-router.delete('/:id', authenticate, async (req, res, next) => {
+router.delete('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement delete contact
     res.status(501).json({ message: 'Not implemented' });
@@ -93,7 +93,7 @@ router.delete('/:id', authenticate, async (req, res, next) => {
  * @desc  Toggle contact favorite status
  * @access Private
  */
-router.post('/:id/favorite', authenticate, async (req, res, next) => {
+router.post('/:id/favorite', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement toggle favorite
     res.status(501).json({ message: 'Not implemented' });

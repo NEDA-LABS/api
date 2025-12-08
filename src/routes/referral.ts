@@ -8,7 +8,7 @@ const router = Router();
  * @desc  Get user's referral code
  * @access Private
  */
-router.get('/code', authenticate, async (req, res, next) => {
+router.get('/code', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get referral code
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.get('/code', authenticate, async (req, res, next) => {
  * @desc  Apply a referral code
  * @access Private
  */
-router.post('/apply', authenticate, async (req, res, next) => {
+router.post('/apply', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement apply referral
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.post('/apply', authenticate, async (req, res, next) => {
  * @desc  Get referral statistics
  * @access Private
  */
-router.get('/stats', authenticate, async (req, res, next) => {
+router.get('/stats', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get stats
     res.status(501).json({ message: 'Not implemented' });
@@ -50,7 +50,7 @@ router.get('/stats', authenticate, async (req, res, next) => {
  * @desc  Get user's referrals
  * @access Private
  */
-router.get('/referrals', authenticate, async (req, res, next) => {
+router.get('/referrals', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get referrals
     res.status(501).json({ message: 'Not implemented' });
@@ -68,7 +68,7 @@ router.get('/referrals', authenticate, async (req, res, next) => {
  * @desc  Get influencer profile
  * @access Private
  */
-router.get('/influencer/profile', authenticate, async (req, res, next) => {
+router.get('/influencer/profile', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get influencer profile
     res.status(501).json({ message: 'Not implemented' });
@@ -82,7 +82,7 @@ router.get('/influencer/profile', authenticate, async (req, res, next) => {
  * @desc  Create/update influencer profile
  * @access Private
  */
-router.post('/influencer/profile', authenticate, async (req, res, next) => {
+router.post('/influencer/profile', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement create/update influencer profile
     res.status(501).json({ message: 'Not implemented' });
@@ -96,7 +96,7 @@ router.post('/influencer/profile', authenticate, async (req, res, next) => {
  * @desc  Get influencer earnings
  * @access Private
  */
-router.get('/influencer/earnings', authenticate, async (req, res, next) => {
+router.get('/influencer/earnings', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get earnings
     res.status(501).json({ message: 'Not implemented' });
@@ -114,7 +114,7 @@ router.get('/influencer/earnings', authenticate, async (req, res, next) => {
  * @desc  List all influencers (admin only)
  * @access Admin
  */
-router.get('/admin/influencers', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/admin/influencers', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement list influencers
     res.status(501).json({ message: 'Not implemented' });
@@ -128,7 +128,7 @@ router.get('/admin/influencers', authenticate, requireAdmin, async (req, res, ne
  * @desc  Approve influencer (admin only)
  * @access Admin
  */
-router.post('/admin/influencers/:id/approve', authenticate, requireAdmin, async (req, res, next) => {
+router.post('/admin/influencers/:id/approve', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement approve influencer
     res.status(501).json({ message: 'Not implemented' });

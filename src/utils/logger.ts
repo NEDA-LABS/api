@@ -56,7 +56,7 @@ const devFormat = winston.format.combine(
   winston.format.colorize({ all: true }),
   winston.format.printf(({ timestamp, level, message, service, requestId, ...meta }) => {
     // Build prefix
-    const prefix = requestId ? `[${requestId.slice(0, 8)}]` : '';
+    const prefix = typeof requestId === 'string' ? `[${requestId.slice(0, 8)}]` : '';
     
     // Format metadata
     let metaStr = '';

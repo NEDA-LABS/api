@@ -8,7 +8,7 @@ const router = Router();
  * @desc  Get list of supported banks
  * @access Private
  */
-router.get('/banks', authenticate, async (req, res, next) => {
+router.get('/banks', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get banks
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.get('/banks', authenticate, async (req, res, next) => {
  * @desc  Get user's bank accounts
  * @access Private
  */
-router.get('/bank-accounts', authenticate, async (req, res, next) => {
+router.get('/bank-accounts', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get bank accounts
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.get('/bank-accounts', authenticate, async (req, res, next) => {
  * @desc  Add a bank account
  * @access Private
  */
-router.post('/bank-accounts', authenticate, async (req, res, next) => {
+router.post('/bank-accounts', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement add bank account
     res.status(501).json({ message: 'Not implemented' });
@@ -50,7 +50,7 @@ router.post('/bank-accounts', authenticate, async (req, res, next) => {
  * @desc  Get user's virtual account for deposits
  * @access Private
  */
-router.get('/virtual-account', authenticate, async (req, res, next) => {
+router.get('/virtual-account', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get virtual account
     res.status(501).json({ message: 'Not implemented' });
@@ -64,7 +64,7 @@ router.get('/virtual-account', authenticate, async (req, res, next) => {
  * @desc  Create virtual account
  * @access Private
  */
-router.post('/virtual-account', authenticate, async (req, res, next) => {
+router.post('/virtual-account', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement create virtual account
     res.status(501).json({ message: 'Not implemented' });
@@ -78,7 +78,7 @@ router.post('/virtual-account', authenticate, async (req, res, next) => {
  * @desc  Redeem cNGN to fiat
  * @access Private
  */
-router.post('/redeem', authenticate, async (req, res, next) => {
+router.post('/redeem', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement redeem
     res.status(501).json({ message: 'Not implemented' });
@@ -92,7 +92,7 @@ router.post('/redeem', authenticate, async (req, res, next) => {
  * @desc  Get cNGN transactions
  * @access Private
  */
-router.get('/transactions', authenticate, async (req, res, next) => {
+router.get('/transactions', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get transactions
     res.status(501).json({ message: 'Not implemented' });

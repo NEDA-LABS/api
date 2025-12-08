@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ const router = Router();
  * @access Private
  * @query page, limit, type, status, startDate, endDate
  */
-router.get('/', authenticate, async (req, res, next) => {
+router.get('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement list transactions with filters
     res.status(501).json({ message: 'Not implemented' });
@@ -23,7 +23,7 @@ router.get('/', authenticate, async (req, res, next) => {
  * @desc  Get transaction by ID
  * @access Private
  */
-router.get('/:id', authenticate, async (req, res, next) => {
+router.get('/:id', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get transaction
     res.status(501).json({ message: 'Not implemented' });
@@ -37,7 +37,7 @@ router.get('/:id', authenticate, async (req, res, next) => {
  * @desc  Create a new transaction record
  * @access Private
  */
-router.post('/', authenticate, async (req, res, next) => {
+router.post('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement create transaction
     res.status(501).json({ message: 'Not implemented' });
@@ -51,7 +51,7 @@ router.post('/', authenticate, async (req, res, next) => {
  * @desc  Update transaction status
  * @access Private
  */
-router.patch('/:id/status', authenticate, async (req, res, next) => {
+router.patch('/:id/status', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement update transaction status
     res.status(501).json({ message: 'Not implemented' });
@@ -65,7 +65,7 @@ router.patch('/:id/status', authenticate, async (req, res, next) => {
  * @desc  Get transaction statistics
  * @access Private
  */
-router.get('/stats', authenticate, async (req, res, next) => {
+router.get('/stats', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement transaction stats
     res.status(501).json({ message: 'Not implemented' });

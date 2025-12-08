@@ -17,7 +17,7 @@
  */
 
 import crypto from 'crypto';
-import { logger } from '../utils/logger.js';
+import { logger, log } from '../utils/logger.js';
 // AppError available for future error handling enhancements
 
 // =============================================================================
@@ -283,10 +283,14 @@ class ApiKeyService {
     };
 
     // Log for audit (never log the full key!)
-    logger.audit('API key created', input.userId, 'api_key.create', {
-      keyId,
-      environment,
-      hasExpiration: !!input.expiresAt,
+    log.audit('API key created', {
+      userId: input.userId,
+      resource: 'api_key',
+      details: {
+        keyId,
+        environment,
+        hasExpiration: !!input.expiresAt,
+      }
     });
 
     // Return data needed for storage

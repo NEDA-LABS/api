@@ -25,7 +25,7 @@ export const userController = {
    * Get user by ID
    */
   async getUserById(req: Request, res: Response): Promise<void> {
-    const user = await userService.getUserById(req.params.id);
+    const user = await userService.getUserById(req.params.id!);
     res.json(createSuccessResponse(user));
   },
 
@@ -63,7 +63,7 @@ export const userController = {
    * Deactivate user account (admin only)
    */
   async deactivateUser(req: Request, res: Response): Promise<void> {
-    const user = await userService.deactivateUser(req.params.id);
+    const user = await userService.deactivateUser(req.params.id!);
     res.json(createSuccessResponse(user, 'User deactivated'));
   },
 
@@ -72,7 +72,7 @@ export const userController = {
    * Reactivate user account (admin only)
    */
   async reactivateUser(req: Request, res: Response): Promise<void> {
-    const user = await userService.reactivateUser(req.params.id);
+    const user = await userService.reactivateUser(req.params.id!);
     res.json(createSuccessResponse(user, 'User reactivated'));
   },
 };

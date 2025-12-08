@@ -8,7 +8,7 @@ const router = Router();
  * @desc  Get user's notifications
  * @access Private
  */
-router.get('/', authenticate, async (req, res, next) => {
+router.get('/', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get notifications
     res.status(501).json({ message: 'Not implemented' });
@@ -22,7 +22,7 @@ router.get('/', authenticate, async (req, res, next) => {
  * @desc  Mark notification as read
  * @access Private
  */
-router.put('/:id/read', authenticate, async (req, res, next) => {
+router.put('/:id/read', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement mark as read
     res.status(501).json({ message: 'Not implemented' });
@@ -36,7 +36,7 @@ router.put('/:id/read', authenticate, async (req, res, next) => {
  * @desc  Mark all notifications as read
  * @access Private
  */
-router.put('/read-all', authenticate, async (req, res, next) => {
+router.put('/read-all', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement mark all as read
     res.status(501).json({ message: 'Not implemented' });
@@ -54,7 +54,7 @@ router.put('/read-all', authenticate, async (req, res, next) => {
  * @desc  Send broadcast notification (admin only)
  * @access Admin
  */
-router.post('/broadcast', authenticate, requireAdmin, async (req, res, next) => {
+router.post('/broadcast', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement broadcast
     res.status(501).json({ message: 'Not implemented' });
@@ -68,7 +68,7 @@ router.post('/broadcast', authenticate, requireAdmin, async (req, res, next) => 
  * @desc  Get broadcast notifications (admin only)
  * @access Admin
  */
-router.get('/broadcast', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/broadcast', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement get broadcasts
     res.status(501).json({ message: 'Not implemented' });

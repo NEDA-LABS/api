@@ -12,7 +12,7 @@ const router = Router();
  * @desc  Get KYC verification status for current user
  * @access Private
  */
-router.get('/status', authenticate, async (req, res, next) => {
+router.get('/status', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get KYC status
     res.status(501).json({ message: 'Not implemented' });
@@ -26,7 +26,7 @@ router.get('/status', authenticate, async (req, res, next) => {
  * @desc  Start Smile ID verification
  * @access Private
  */
-router.post('/smile-id/request', authenticate, async (req, res, next) => {
+router.post('/smile-id/request', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement Smile ID request
     res.status(501).json({ message: 'Not implemented' });
@@ -40,7 +40,7 @@ router.post('/smile-id/request', authenticate, async (req, res, next) => {
  * @desc  Get Smile ID verification status
  * @access Private
  */
-router.get('/smile-id/status', authenticate, async (req, res, next) => {
+router.get('/smile-id/status', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get Smile ID status
     res.status(501).json({ message: 'Not implemented' });
@@ -54,7 +54,7 @@ router.get('/smile-id/status', authenticate, async (req, res, next) => {
  * @desc  Get supported ID types by country
  * @access Public
  */
-router.get('/smile-id/supported-types', async (req, res, next) => {
+router.get('/smile-id/supported-types', async (_req, res, next) => {
   try {
     // TODO: Implement get supported types
     res.status(501).json({ message: 'Not implemented' });
@@ -72,7 +72,7 @@ router.get('/smile-id/supported-types', async (req, res, next) => {
  * @desc  Get Sumsub access token
  * @access Private
  */
-router.post('/sumsub/token', authenticate, async (req, res, next) => {
+router.post('/sumsub/token', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get Sumsub token
     res.status(501).json({ message: 'Not implemented' });
@@ -86,7 +86,7 @@ router.post('/sumsub/token', authenticate, async (req, res, next) => {
  * @desc  Get Sumsub verification status
  * @access Private
  */
-router.get('/sumsub/status', authenticate, async (req, res, next) => {
+router.get('/sumsub/status', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get Sumsub status
     res.status(501).json({ message: 'Not implemented' });
@@ -104,7 +104,7 @@ router.get('/sumsub/status', authenticate, async (req, res, next) => {
  * @desc  Get KYB verification status
  * @access Private
  */
-router.get('/kyb/status', authenticate, async (req, res, next) => {
+router.get('/kyb/status', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement get KYB status
     res.status(501).json({ message: 'Not implemented' });
@@ -118,7 +118,7 @@ router.get('/kyb/status', authenticate, async (req, res, next) => {
  * @desc  Submit business information
  * @access Private
  */
-router.post('/kyb/business-info', authenticate, async (req, res, next) => {
+router.post('/kyb/business-info', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement submit business info
     res.status(501).json({ message: 'Not implemented' });
@@ -132,7 +132,7 @@ router.post('/kyb/business-info', authenticate, async (req, res, next) => {
  * @desc  Submit financial information
  * @access Private
  */
-router.post('/kyb/financial-info', authenticate, async (req, res, next) => {
+router.post('/kyb/financial-info', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement submit financial info
     res.status(501).json({ message: 'Not implemented' });
@@ -146,7 +146,7 @@ router.post('/kyb/financial-info', authenticate, async (req, res, next) => {
  * @desc  Upload KYB documents
  * @access Private
  */
-router.post('/kyb/documents', authenticate, async (req, res, next) => {
+router.post('/kyb/documents', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement upload documents
     res.status(501).json({ message: 'Not implemented' });
@@ -160,7 +160,7 @@ router.post('/kyb/documents', authenticate, async (req, res, next) => {
  * @desc  Submit KYB application
  * @access Private
  */
-router.post('/kyb/submit', authenticate, async (req, res, next) => {
+router.post('/kyb/submit', authenticate, async (_req, res, next) => {
   try {
     // TODO: Implement submit KYB
     res.status(501).json({ message: 'Not implemented' });
@@ -178,7 +178,7 @@ router.post('/kyb/submit', authenticate, async (req, res, next) => {
  * @desc  List all KYC applications (admin only)
  * @access Admin
  */
-router.get('/admin/applications', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/admin/applications', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement list applications
     res.status(501).json({ message: 'Not implemented' });
@@ -192,7 +192,7 @@ router.get('/admin/applications', authenticate, requireAdmin, async (req, res, n
  * @desc  Get KYC application details (admin only)
  * @access Admin
  */
-router.get('/admin/applications/:id', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/admin/applications/:id', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement get application
     res.status(501).json({ message: 'Not implemented' });
@@ -206,7 +206,7 @@ router.get('/admin/applications/:id', authenticate, requireAdmin, async (req, re
  * @desc  Take action on KYC application (approve/reject)
  * @access Admin
  */
-router.post('/admin/applications/:id/action', authenticate, requireAdmin, async (req, res, next) => {
+router.post('/admin/applications/:id/action', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement action on application
     res.status(501).json({ message: 'Not implemented' });
@@ -220,7 +220,7 @@ router.post('/admin/applications/:id/action', authenticate, requireAdmin, async 
  * @desc  Get KYC audit log
  * @access Admin
  */
-router.get('/admin/audit', authenticate, requireAdmin, async (req, res, next) => {
+router.get('/admin/audit', authenticate, requireAdmin, async (_req, res, next) => {
   try {
     // TODO: Implement audit log
     res.status(501).json({ message: 'Not implemented' });
