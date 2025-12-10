@@ -61,6 +61,36 @@ const paycrestDocs = `
 </table>
 
 <h3>API Endpoints</h3>
+
+<h4>Orders</h4>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/paycrest/orders</code>
+  <p>Create a new payment order. Requires <code>amount</code>, <code>token</code>, <code>network</code>, <code>recipient</code> details.</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/orders</code>
+  <p>List user's payment orders history from local database.</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/orders/:orderId</code>
+  <p>Get details of a specific order. Fetches fresh status from Paycrest.</p>
+</div>
+
+<h4>Rates & Verification</h4>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/rates/:token/:amount/:currency</code>
+  <p>Get exchange rate for a specific token amount to fiat currency.</p>
+</div>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/paycrest/verify-account</code>
+  <p>Verify a bank or mobile money account. Requires <code>institution</code> and <code>accountIdentifier</code>.</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/institutions/:currency</code>
+  <p>Get supported financial institutions for a specific currency (e.g. NGN).</p>
+</div>
+
+<h4>System</h4>
 <div class="endpoint">
   <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/currencies</code>
   <p>Fetch supported fiat currencies and their details from Paycrest.</p>

@@ -80,18 +80,4 @@ router.post('/cngn', async (_req, res, next) => {
   }
 });
 
-/**
- * @route POST /api/v1/webhooks/paycrest
- * @desc  Paycrest webhook endpoint
- * @access Public (signature verified)
- */
-router.post('/paycrest', async (_req, res, next) => {
-  try {
-    // TODO: Implement Paycrest webhook handler
-    res.status(501).json({ message: 'Not implemented' });
-  } catch (error) {
-    next(error);
-  }
-});
-
 export default router;
