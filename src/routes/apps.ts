@@ -17,7 +17,7 @@ const createAppSchema = z.object({
 });
 
 // GET /api/v1/apps - List all apps
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   try {
     const apps = await prisma.app.findMany({
       include: {
@@ -45,7 +45,8 @@ router.post('/', async (req, res) => {
     });
     
     if (existing) {
-      return res.status(409).json({ success: false, error: 'App with this name already exists' });
+      res.status(409).json({ success: false, error: 'App with this name already exists' });
+      return;
     }
 
     const app = await prisma.app.create({
@@ -60,7 +61,8 @@ router.post('/', async (req, res) => {
     res.status(201).json({ success: true, data: app });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ success: false, error: error.errors });
+      res.status(400).json({ success: false, error: error.errors });
+      return;
     }
     console.error('Failed to create app:', error);
     res.status(500).json({ success: false, error: 'Failed to create app' });
@@ -78,7 +80,8 @@ router.post('/:id/keys', async (req, res) => {
     });
 
     if (!app) {
-      return res.status(404).json({ success: false, error: 'App not found' });
+      res.status(404).json({ success: false, error: 'App not found' });
+      return;
     }
 
     // Generate key data using service

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { apiKeyService } from '../services/apikey.service.js';
 import { prisma } from '../repositories/prisma.js';
 
-export const apiKeyAuth = async (req: Request, res: Response, next: NextFunction) => {
+export const apiKeyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers['authorization'] || req.headers['x-api-key'];
     let key = '';
@@ -16,7 +16,8 @@ export const apiKeyAuth = async (req: Request, res: Response, next: NextFunction
     }
 
     if (!key) {
-      return res.status(401).json({ message: 'Missing API key' });
+      res.status(401).json({ message: 'Missing API key' });
+      return;
     }
 
     // Validate using the robust service
@@ -54,7 +55,8 @@ export const apiKeyAuth = async (req: Request, res: Response, next: NextFunction
     );
 
     if (!validated) {
-      return res.status(401).json({ message: 'Invalid API key' });
+      res.status(401).json({ message: 'Invalid API key' });
+      return;
     }
 
     // Attach App context
