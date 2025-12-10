@@ -31,6 +31,40 @@ const css = `
 </style>
 `;
 
+const appsDocs = `
+<h2 id="apps">Apps & API Keys <span class="badge completed">Completed</span></h2>
+<p>Manage application credentials for frontend clients and server-to-server communication.</p>
+
+<h3>Authentication</h3>
+<p>All API endpoints protected by API Key must include the following header:</p>
+<pre>x-api-key: np_live_...</pre>
+<p>Or via Bearer token:</p>
+<pre>Authorization: Bearer np_live_...</pre>
+
+<h3>API Endpoints</h3>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/apps</code>
+  <p>List all registered applications and their API key counts.</p>
+</div>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/apps</code>
+  <p>Register a new application.</p>
+  <pre>{
+  "name": "webapp",
+  "description": "Main Web Application",
+  "webhookUrl": "https://..."
+}</pre>
+</div>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/apps/:id/keys</code>
+  <p>Generate a new API Key for an application. <strong>The key is returned only once.</strong></p>
+  <pre>{
+  "name": "Production Key",
+  "environment": "live"
+}</pre>
+</div>
+`;
+
 const paycrestDocs = `
 <h2 id="paycrest">Paycrest Integration (Off-Ramp) <span class="badge completed">Completed</span></h2>
 <p>Full integration with Paycrest API for global off-ramp operations (Crypto to Fiat).</p>
@@ -191,6 +225,7 @@ router.get('/', (_req, res) => {
   <div class="nav">
     <strong>NedaPay Backend</strong>
     <a href="#overview">Overview</a>
+    <a href="#apps">Apps & Keys</a>
     <a href="#paycrest">Paycrest</a>
     <a href="#idrx">IDRX</a>
     <a href="#yellowcard">Yellow Card</a>
@@ -198,6 +233,8 @@ router.get('/', (_req, res) => {
 
   <h1 id="overview">Migration & Integration Guide</h1>
   <p>This documentation tracks the status and usage of the new backend services.</p>
+
+  ${appsDocs}
 
   ${paycrestDocs}
   

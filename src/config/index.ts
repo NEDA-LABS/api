@@ -104,6 +104,7 @@ const envSchema = z.object({
   ADMIN_WALLET_1: z.string().optional(),
   ADMIN_WALLET_2: z.string().optional(),
   ADMIN_PASSWORD: z.string().optional(),
+  ADMIN_MASTER_KEY: z.string().optional(),
   
   // Webhook
   WEBHOOK_BASE_URL: z.string().optional(),
@@ -242,6 +243,7 @@ export const config = {
   admin: {
     wallets: [env.ADMIN_WALLET_1, env.ADMIN_WALLET_2].filter(Boolean) as string[],
     password: env.ADMIN_PASSWORD,
+    masterKey: env.ADMIN_MASTER_KEY,
   },
   
   // Webhook

@@ -26,7 +26,8 @@ import { logger, log } from '../utils/logger.js';
 
 export interface ApiKeyData {
   id: string;
-  userId: string;
+  userId?: string;
+  appId?: string;
   keyId: string;
   hashedKey: string;
   name: string | null;
@@ -40,7 +41,8 @@ export interface ApiKeyData {
 }
 
 export interface ApiKeyCreateInput {
-  userId: string;
+  userId?: string;
+  appId?: string;
   name?: string;
   environment?: 'live' | 'test';
   permissions?: string[];
@@ -61,7 +63,8 @@ export interface ApiKeyCreateResult {
 
 export interface ValidatedApiKey {
   id: string;
-  userId: string;
+  userId?: string;
+  appId?: string;
   keyId: string;
   name: string | null;
   permissions: string[];
@@ -284,12 +287,13 @@ class ApiKeyService {
 
     // Log for audit (never log the full key!)
     log.audit('API key created', {
-      userId: input.userId,
+      userId: input.userId || 'system',
       resource: 'api_key',
       details: {
         keyId,
         environment,
         hasExpiration: !!input.expiresAt,
+        appId: input.appId,
       }
     });
 
@@ -363,6 +367,7 @@ class ApiKeyService {
     const validated: ValidatedApiKey = {
       id: storedData.id,
       userId: storedData.userId,
+      appId: storedData.appId,
       keyId: storedData.keyId,
       name: storedData.name,
       permissions: storedData.permissions || [],

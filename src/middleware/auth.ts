@@ -177,3 +177,59 @@ export const requireUser = (
   }
   next();
 };
+
+/**
+ * Require Admin Access via JWT (Wallet) OR Master Key
+ */
+export const requireAdminOrMasterKey = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): Promise<void> => {
+  // 1. Check for Master Key
+  const masterKey = config.admin.masterKey;
+  const providedKey = req.headers['x-admin-key'];
+
+  if (masterKey && typeof providedKey === 'string' && providedKey === masterKey) {
+    // Authorized via Master Key
+    return next();
+  }
+
+  // 2. Fallback to JWT Auth
+  try {
+    const token = extractBearerToken(req.headers.authorization);
+    
+    if (!token) {
+      throw new AuthenticationError('Authentication required');
+    }
+    
+    const payload = await verifyToken(token);
+    
+    // Attach user
+    req.user = {
+      id: '',
+      privyUserId: payload.sub,
+      email: payload.email || null,
+      wallet: payload.wallet || null,
+    };
+    
+    // Check Admin Wallet
+    const userWallet = req.user.wallet?.toLowerCase();
+    const isAdmin = config.admin.wallets.some(
+      (adminWallet) => adminWallet.toLowerCase() === userWallet
+    );
+    
+    if (!isAdmin) {
+      throw new AuthorizationError('Admin access required');
+    }
+    
+    next();
+  } catch (error) {
+    // Pass original error if it was auth related, or wrap it
+    if (error instanceof AuthenticationError || error instanceof AuthorizationError) {
+      next(error);
+    } else {
+      next(new AuthenticationError('Authentication failed'));
+    }
+  }
+};

@@ -28,6 +28,7 @@ import notificationRoutes from './notifications.js';
 
 // Admin routes
 import adminRoutes from './admin.js';
+import appsRoutes from './apps.js';
 
 // Webhooks
 import webhookRoutes from './webhooks.js';
@@ -85,6 +86,7 @@ router.use(`${API_VERSION}/ramp`, rampRoutes);
 // ADMIN ROUTES
 // =============================================================================
 router.use(`${API_VERSION}/admin`, adminRoutes);
+router.use(`${API_VERSION}/apps`, appsRoutes);
 
 // =============================================================================
 // WEBHOOKS (different auth mechanism)
