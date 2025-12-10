@@ -10,9 +10,10 @@ import { config } from '../config/index.js';
 const LOG_DIR = path.resolve(process.cwd(), 'logs');
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_FILES = 14; // Keep 14 days of logs
+const IS_VERCEL = process.env.VERCEL === '1';
 
-// Ensure logs directory exists
-if (!fs.existsSync(LOG_DIR)) {
+// Ensure logs directory exists (skip in Vercel/Serverless)
+if (!IS_VERCEL && !fs.existsSync(LOG_DIR)) {
   fs.mkdirSync(LOG_DIR, { recursive: true });
 }
 
@@ -161,37 +162,40 @@ if (config.isProd) {
     stderrLevels: ['fatal', 'error'],
   }));
   
-  // Error log file - errors and fatal only
-  logger.add(new winston.transports.File({
-    filename: path.join(LOG_DIR, 'error.log'),
-    level: 'error',
-    format: errorFileFormat,
-    maxsize: MAX_FILE_SIZE,
-    maxFiles: MAX_FILES,
-    tailable: true,
-  }));
-  
-  // Combined log file - all levels
-  logger.add(new winston.transports.File({
-    filename: path.join(LOG_DIR, 'combined.log'),
-    format: prodFormat,
-    maxsize: MAX_FILE_SIZE,
-    maxFiles: MAX_FILES,
-    tailable: true,
-  }));
-  
-  // Audit log - info level for important events
-  logger.add(new winston.transports.File({
-    filename: path.join(LOG_DIR, 'audit.log'),
-    level: 'info',
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
-    ),
-    maxsize: MAX_FILE_SIZE,
-    maxFiles: MAX_FILES * 2, // Keep audit logs longer
-    tailable: true,
-  }));
+  // Skip file logging in Vercel/Serverless environment
+  if (!IS_VERCEL) {
+    // Error log file - errors and fatal only
+    logger.add(new winston.transports.File({
+      filename: path.join(LOG_DIR, 'error.log'),
+      level: 'error',
+      format: errorFileFormat,
+      maxsize: MAX_FILE_SIZE,
+      maxFiles: MAX_FILES,
+      tailable: true,
+    }));
+    
+    // Combined log file - all levels
+    logger.add(new winston.transports.File({
+      filename: path.join(LOG_DIR, 'combined.log'),
+      format: prodFormat,
+      maxsize: MAX_FILE_SIZE,
+      maxFiles: MAX_FILES,
+      tailable: true,
+    }));
+    
+    // Audit log - info level for important events
+    logger.add(new winston.transports.File({
+      filename: path.join(LOG_DIR, 'audit.log'),
+      level: 'info',
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      ),
+      maxsize: MAX_FILE_SIZE,
+      maxFiles: MAX_FILES * 2, // Keep audit logs longer
+      tailable: true,
+    }));
+  }
 
 } else if (config.isTest) {
   // TEST: Silent by default, can enable with LOG_LEVEL=debug
