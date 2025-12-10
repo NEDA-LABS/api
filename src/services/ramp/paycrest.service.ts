@@ -5,7 +5,7 @@
  * Handles payment orders, account verification, rates, institutions, and webhooks.
  */
 
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import crypto from 'crypto';
 import { config } from '../../config/index.js';
 import { logger } from '../../utils/logger.js';
@@ -207,14 +207,14 @@ class PaycrestService {
 
     // Request interceptor for logging
     this.client.interceptors.request.use(
-      (config) => {
+      (config: InternalAxiosRequestConfig) => {
         logger.debug('Paycrest API request', {
           method: config.method?.toUpperCase(),
           url: config.url,
         });
         return config;
       },
-      (error) => {
+      (error: any) => {
         logger.error('Paycrest request error', error);
         return Promise.reject(error);
       }
@@ -222,14 +222,14 @@ class PaycrestService {
 
     // Response interceptor for logging
     this.client.interceptors.response.use(
-      (response) => {
+      (response: AxiosResponse) => {
         logger.debug('Paycrest API response', {
           status: response.status,
           url: response.config.url,
         });
         return response;
       },
-      (error) => {
+      (error: any) => {
         if (axios.isAxiosError(error)) {
           logger.error('Paycrest API error', error, {
             status: error.response?.status,
