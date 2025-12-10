@@ -1,0 +1,512 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String?           @unique
+  wallet           String?           @unique
+  privyUserId      String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  isActive         Boolean           @default(true)
+  name             String?
+  apiKeys          ApiKey[]
+  merchantSettings MerchantSettings?
+  kycApplications  KYCApplication[]
+  kybApplications  KYBApplication[]
+  sumsubApplications SumsubApplication[]
+}
+
+model MerchantSettings {
+  id                       String   @id @default(uuid())
+  userId                   String   @unique
+  businessName             String?
+  businessEmail            String?
+  businessPhone            String?
+  businessCategory         String?
+  businessDescription      String?
+  autoSettlement           Boolean  @default(true)
+  settlementThreshold      Float    @default(1000)
+  settlementCurrency       String   @default("TSHC")
+  paymentExpiry            Int      @default(60)
+  twoFactorEnabled         Boolean  @default(false)
+  twoFactorSecret          String?
+  withdrawalConfirmation   Boolean  @default(true)
+  transactionNotifications Boolean  @default(true)
+  settlementNotifications  Boolean  @default(true)
+  securityAlerts           Boolean  @default(true)
+  marketingUpdates         Boolean  @default(false)
+  webhookUrl               String?
+  webhookSecret            String?
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id          String    @id @default(uuid())
+  userId      String
+  keyId       String    @unique
+  hashedKey   String
+  environment String
+  name        String?
+  lastUsed    DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([keyId])
+  @@index([userId, environment])
+}
+
+model Transaction {
+  id           String        @id @default(uuid())
+  merchantId   String
+  wallet       String
+  amount       Float
+  currency     String
+  status       String
+  txHash       String
+  createdAt    DateTime      @default(now())
+  invoiceId    String?       @unique
+  Notification Notification? @relation("TransactionNotification")
+}
+
+model PaymentLink {
+  id           String        @id @default(uuid())
+  merchantId   String
+  url          String        @unique
+  amount       Float?
+  currency     String?
+  description  String?
+  status       String
+  createdAt    DateTime      @default(now())
+  redeemedAt   DateTime?
+  invoiceId    String?       @unique
+  expiresAt    DateTime?     // Made optional
+  signature    String        @default("")
+  linkId       String?       @unique
+  invoice      Invoice?      @relation("PaymentLinkInvoice")
+  linkType     LinkType      @default(NORMAL) // Added link type
+  offRampType  OffRampType?  // Added off-ramp type
+  offRampValue String?       // Phone/bank account
+  accountName String?       // Phone/bank account
+  offRampProvider String?    // MNO/Bank name
+  chainId      Int?          // Added chain ID
+}
+
+enum LinkType {
+  NORMAL
+  OFF_RAMP
+}
+
+enum OffRampType {
+  PHONE
+  BANK_ACCOUNT
+}
+
+model Notification {
+  id                   String       @id @default(uuid())
+  message              String
+  recipient            String
+  type                 String
+  status               String
+  createdAt            DateTime     @default(now())
+  broadcastId          String?
+  relatedTransactionId String?      @unique
+  relatedTransaction   Transaction? @relation("TransactionNotification", fields: [relatedTransactionId], references: [id])
+}
+
+model Invoice {
+  id                String            @id @default(uuid())
+  merchantId        String
+  recipient         String
+  sender            String            @default("not given")
+  email             String
+  paymentCollection String
+  dueDate           DateTime
+  currency          String
+  totalAmount       Float             @default(0)
+  status            String
+  createdAt         DateTime          @default(now())
+  sentAt            DateTime?
+  paidAt            DateTime?
+  canceledAt        DateTime?
+  paymentLinkId     String?           @unique
+  paymentLink       PaymentLink?      @relation("PaymentLinkInvoice", fields: [paymentLinkId], references: [id])
+  lineItems         InvoiceLineItem[]
+}
+
+model InvoiceLineItem {
+  id          String   @id @default(uuid())
+  invoiceId   String
+  description String
+  amount      Float    @default(0)
+  createdAt   DateTime @default(now())
+  Invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model OffRampTransaction {
+  id           String        @unique
+  createdAt    DateTime      @default(now()) 
+  merchantId   String
+  status       String
+  amount       String        @default("...")
+  currency     String        @default("...")
+  accountName  String        @default("...")
+  accountNumber String       @default("...")
+  institution  String        @default("...")
+}
+
+// prisma/schema.prisma - Notification Model
+model BroadcastNotification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// KYC ---models
+// Enums
+enum ApplicationStatus {
+  DRAFT
+  PENDING_DOCUMENTS
+  PENDING_FINANCIAL_INFO
+  PENDING_REVIEW
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  REQUIRES_ADDITIONAL_INFO
+}
+
+enum DocumentType {
+  PASSPORT
+  DRIVERS_LICENSE
+  NATIONAL_ID
+  UTILITY_BILL
+  BANK_STATEMENT
+  CERTIFICATE_OF_INCORPORATION
+  MEMORANDUM_OF_ASSOCIATION
+  BOARD_RESOLUTION
+  SHAREHOLDER_REGISTER
+  FINANCIAL_STATEMENTS
+  BUSINESS_REGISTRATION
+  TAX_CERTIFICATE
+  KYB_FINANCIAL_STATEMENT
+  SELFIE
+  GOVERNMENT_ISSUED_ID
+}
+
+enum DocumentStatus {
+  UPLOADED
+  VERIFIED
+  REJECTED
+  PENDING_REVIEW
+}
+
+enum UserType {
+  INDIVIDUAL
+  BUSINESS
+}
+
+enum EmploymentStatus {
+  EMPLOYED
+  SELF_EMPLOYED
+  UNEMPLOYED
+  RETIRED
+  STUDENT
+}
+
+enum BusinessType {
+  CORPORATION
+  LLC
+  PARTNERSHIP
+  SOLE_PROPRIETORSHIP
+  NON_PROFIT
+  TRUST
+  NGO
+  GOVERNMENT
+}
+
+model KYCApplication {
+  id                String            @id @default(cuid())
+  userId            String            @unique
+  wallet            String            @unique
+  email             String            @unique
+  status            ApplicationStatus @default(DRAFT)
+  submittedAt       DateTime?
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  
+  // Personal Information
+  firstName         String?
+  middleName        String?
+  lastName          String?
+  dateOfBirth       DateTime?
+  nationality       String?
+  countryOfResidence String?
+  phoneNumber       String?
+  
+  // Address
+  street            String?
+  city              String?
+  state             String?
+  postalCode        String?
+  country           String?
+  
+  // Financial Information
+  sourceOfFunds     String?
+  expectedTransactionVolume String?
+  employmentStatus  EmploymentStatus?
+  annualIncome      String?
+  isPEP             Boolean          @default(false)
+  
+  // Legal Agreements
+  termsAccepted     Boolean          @default(false)
+  privacyAccepted   Boolean          @default(false)
+  acceptedAt        DateTime?
+  
+  // Relations
+  user              User?            @relation(fields: [userId], references: [privyUserId])
+  documents         Document[]
+  reviews           ApplicationReview[]
+  
+  @@map("kyc_applications")
+}
+
+model KYBApplication {
+  id                String            @id @default(cuid())
+  userId            String            @unique
+  wallet            String            @unique
+  email             String            @unique
+  status            ApplicationStatus @default(DRAFT)
+  submittedAt       DateTime?
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  
+  // Business Information
+  businessName      String?
+  registrationNumber String?
+  businessType      BusinessType?
+  industry          String?
+  incorporationDate DateTime?
+  taxId             String?
+  website           String?
+  description       String?
+  
+  // Business Address
+  street            String?
+  city              String?
+  state             String?
+  postalCode        String?
+  country           String?
+  
+  // Contact Information
+  contactEmail      String?
+  contactPhone      String?
+  
+  // Legal Agreements
+  termsAccepted     Boolean          @default(false)
+  privacyAccepted   Boolean          @default(false)
+  corporateAccepted Boolean          @default(false)
+  acceptedAt        DateTime?
+  
+  // Relations
+  user              User?            @relation(fields: [userId], references: [privyUserId])
+  documents         Document[]
+  // representatives   AuthorizedRepresentative[]
+  reviews           ApplicationReview[]
+  
+  @@map("kyb_applications")
+}
+
+// model AuthorizedRepresentative {
+//   id                String         @id @default(cuid())
+//   kybApplicationId  String
+//   firstName         String
+//   lastName          String
+//   position          String
+//   email             String
+//   phone             String?
+//   dateOfBirth       DateTime?
+//   nationality       String?
+//   isSignatory       Boolean        @default(false)
+//   createdAt         DateTime       @default(now())
+  
+//   // Relations
+//   kybApplication    KYBApplication @relation(fields: [kybApplicationId], references: [id], onDelete: Cascade)
+  
+//   @@map("authorized_representatives")
+// }
+
+model Document {
+  id                String         @id @default(cuid())
+  filename          String
+  originalName      String
+  fileSize          Int
+  mimeType          String
+  documentType      DocumentType
+  status            DocumentStatus @default(UPLOADED)
+  uploadedAt        DateTime       @default(now())
+  verifiedAt        DateTime?
+  rejectedAt        DateTime?
+  rejectionReason   String?
+  
+  // File storage information
+  storageKey        String         // S3 key or file path
+  storageUrl        String?        // Public URL if needed
+  
+  // Relations
+  kycApplicationId  String?
+  kycApplication    KYCApplication? @relation(fields: [kycApplicationId], references: [id], onDelete: Cascade)
+  kybApplicationId  String?
+  kybApplication    KYBApplication? @relation(fields: [kybApplicationId], references: [id], onDelete: Cascade)
+  
+  @@map("documents")
+}
+
+model ApplicationReview {
+  id                String         @id @default(cuid())
+  reviewerId        String         // Admin user ID
+  status            ApplicationStatus
+  comments          String?
+  reviewedAt        DateTime       @default(now())
+  
+  // Relations
+  kycApplicationId  String?
+  kycApplication    KYCApplication? @relation(fields: [kycApplicationId], references: [id], onDelete: Cascade)
+  kybApplicationId  String?
+  kybApplication    KYBApplication? @relation(fields: [kybApplicationId], references: [id], onDelete: Cascade)
+  
+  @@map("application_reviews")
+}
+
+// Audit Trail
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String
+  entityType  String   // "KYCApplication", "KYBApplication", "Document", etc.
+  entityId    String
+  changes     Json?    // Store the changes made
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  
+  @@map("audit_logs")
+}
+
+//SUMSUB----------------------------------------------------------------------------------------
+// Add these enums to your existing schema
+enum SumsubVerificationStatus {
+  INIT
+  PENDING
+  QUEUED
+  PRECHECKED
+  ON_HOLD
+  COMPLETED
+}
+
+enum SumsubReviewAnswer {
+  GREEN   // Approved
+  RED     // Rejected
+  YELLOW  // Manual review required
+}
+
+enum SumsubReviewRejectType {
+  FINAL
+  RETRY
+}
+
+enum SumsubWebhookEventType {
+  APPLICANT_CREATED
+  APPLICANT_PENDING
+  APPLICANT_REVIEWED
+  APPLICANT_ON_HOLD
+  APPLICANT_RESET
+  APPLICANT_DELETED
+  VIDEO_IDENT_STATUS_CHANGED
+}
+
+// New models to add to your schema
+
+// Main Sumsub application tracking
+model SumsubApplication {
+  id                    String                    @id @default(cuid())
+  userId                String
+  applicantId           String                    @unique  // Sumsub's applicant ID
+  inspectionId          String                    @unique  // Sumsub's inspection ID
+  externalUserId        String?                   // Your user ID sent to Sumsub
+  levelName             String                    // Sumsub verification level
+  applicantType         String?                   // individual, company
+  verificationStatus    SumsubVerificationStatus  @default(INIT)
+  reviewAnswer          SumsubReviewAnswer?
+  reviewRejectType      SumsubReviewRejectType?
+  sandboxMode           Boolean                   @default(false)
+  
+  // Timestamps
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  submittedAt           DateTime?                 // When applicant submitted docs
+  reviewedAt            DateTime?                 // When review was completed
+  
+  // Relations
+  user                  User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  webhookEvents         SumsubWebhookEvent[]
+  reviewHistory         SumsubReviewHistory[]
+  
+  @@map("sumsub_applications")
+}
+
+// Track all webhook events received from Sumsub
+model SumsubWebhookEvent {
+  id                    String                    @id @default(cuid())
+  sumsubApplicationId   String
+  correlationId         String                    @unique  // Sumsub's correlation ID for idempotency
+  eventType             SumsubWebhookEventType
+  payload               Json                      // Store full webhook payload
+  processed             Boolean                   @default(false)
+  processedAt           DateTime?
+  errorMessage          String?                   // If processing failed
+  createdAt             DateTime                  @default(now())
+  
+  // Relations
+  sumsubApplication     SumsubApplication         @relation(fields: [sumsubApplicationId], references: [id], onDelete: Cascade)
+  
+  @@index([correlationId])
+  @@index([eventType, createdAt])
+  @@map("sumsub_webhook_events")
+}
+
+// Track review history and status changes
+model SumsubReviewHistory {
+  id                    String                    @id @default(cuid())
+  sumsubApplicationId   String
+  reviewAnswer          SumsubReviewAnswer
+  reviewRejectType      SumsubReviewRejectType?
+  rejectLabels          String[]                  // Array of rejection reasons
+  buttonIds             String[]                  // Sumsub button IDs for rejection reasons
+  moderationComment     String?                   // Sumsub's moderation comment
+  clientComment         String?                   // Your custom comment
+  reviewMode            String?                   // ongoingAML, ongoingDocExpired, etc.
+  reviewedAt            DateTime                  @default(now())
+  
+  // Relations
+  sumsubApplication     SumsubApplication         @relation(fields: [sumsubApplicationId], references: [id], onDelete: Cascade)
+  
+  @@map("sumsub_review_history")
+}
