@@ -195,11 +195,29 @@ class ApiKeyService {
 
   /**
    * Extract keyId from full key for quick lookups
+   * Relies on fixed length of KeyID (11 chars for 8 bytes)
    */
   private extractKeyId(key: string): string | null {
     // Format: np_live_KEYID_RANDOM or np_test_KEYID_RANDOM
-    const match = key.match(/^np_(?:live|test)_([A-Za-z0-9_-]+)_/);
-    return match?.[1] ?? null;
+    // KEYID is base64url of 8 bytes -> 11 chars
+    
+    let prefixLength = 0;
+    if (key.startsWith(KEY_PREFIX_LIVE)) {
+      prefixLength = KEY_PREFIX_LIVE.length;
+    } else if (key.startsWith(KEY_PREFIX_TEST)) {
+      prefixLength = KEY_PREFIX_TEST.length;
+    } else {
+      return null;
+    }
+    
+    // keyId is the next 11 characters
+    // Base64url of 8 bytes is always 11 chars
+    const keyIdLength = 11;
+    if (key.length < prefixLength + keyIdLength) {
+      return null;
+    }
+    
+    return key.substring(prefixLength, prefixLength + keyIdLength);
   }
 
   /**
