@@ -23,6 +23,16 @@ export type {
   SupportedToken,
 } from './paycrest.service.js';
 
+// Paycrest Transaction Service (Transaction retrieval)
+export { paycrestTransactionService } from './paycrestTransaction.service.js';
+export type {
+  PaycrestTransactionFilters,
+  PaginationOptions,
+  PaycrestTransaction,
+  PaycrestTransactionSummary,
+  PaycrestTransactionsResult,
+} from './paycrestTransaction.service.js';
+
 // IDRX (On/Off-ramp)
 export { idrxService } from './idrx/service.js';
 export { idrxSyncService } from './idrx/sync.service.js';

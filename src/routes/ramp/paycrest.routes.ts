@@ -7,7 +7,9 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { authenticate } from '../../middleware/auth.js';
+import { apiKeyAuth } from '../../middleware/apiKeyAuth.js';
 import { paycrestService } from '../../services/ramp/paycrest.service.js';
+import { paycrestTransactionService } from '../../services/ramp/paycrestTransaction.service.js';
 import { prisma } from '../../repositories/prisma.js';
 import { logger } from '../../utils/logger.js';
 import { createPaymentNotificationService } from '../../services/email/index.js';
@@ -136,6 +138,175 @@ router.get('/orders', authenticate, async (req: Request, res: Response, next: Ne
         page: parseInt(page as string) || 1,
         pageSize: parseInt(pageSize as string) || 20,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// =============================================================================
+// PAYCREST TRANSACTIONS (Retrieve by Wallet Address)
+// =============================================================================
+
+/**
+ * Get Paycrest transactions by wallet address
+ * GET /api/v1/ramp/paycrest/transactions
+ * 
+ * Query Parameters:
+ * - wallet (required): Wallet address (merchantId)
+ * - status: Filter by status (pending, processing, settled, refunded, expired, failed)
+ * - currency: Filter by currency (NGN, KES, GHS, etc.)
+ * - startDate: Filter by start date (ISO 8601 format)
+ * - endDate: Filter by end date (ISO 8601 format)
+ * - page: Page number (default: 1)
+ * - pageSize: Items per page (default: 20, max: 100)
+ * - includeSummary: Include transaction summary statistics (default: false)
+ * 
+ * Authentication: API Key or JWT
+ */
+router.get('/transactions', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { 
+      wallet, 
+      status, 
+      currency, 
+      startDate, 
+      endDate, 
+      page, 
+      pageSize,
+      includeSummary 
+    } = req.query;
+
+    // Wallet address is required
+    if (!wallet || typeof wallet !== 'string') {
+      res.status(400).json({
+        success: false,
+        error: 'Wallet address is required',
+        code: 'MISSING_WALLET',
+      });
+      return;
+    }
+
+    // Validate wallet format (basic Ethereum address check)
+    if (!/^0x[a-fA-F0-9]{40}$/.test(wallet)) {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid wallet address format',
+        code: 'INVALID_WALLET_FORMAT',
+      });
+      return;
+    }
+
+    const result = await paycrestTransactionService.getTransactionsByWallet(
+      {
+        wallet,
+        status: status as string | undefined,
+        currency: currency as string | undefined,
+        startDate: startDate as string | undefined,
+        endDate: endDate as string | undefined,
+      },
+      {
+        page: parseInt(page as string) || 1,
+        pageSize: parseInt(pageSize as string) || 20,
+      },
+      includeSummary === 'true'
+    );
+
+    logger.info('Paycrest transactions fetched', {
+      wallet: wallet.substring(0, 10) + '...',
+      count: result.transactions.length,
+      totalCount: result.pagination.totalCount,
+    });
+
+    res.json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * Get a single Paycrest transaction by ID
+ * GET /api/v1/ramp/paycrest/transactions/:transactionId
+ * 
+ * Query Parameters:
+ * - wallet: Optional wallet address for ownership verification
+ * 
+ * Authentication: API Key or JWT
+ */
+router.get('/transactions/:transactionId', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { transactionId } = req.params;
+    const { wallet } = req.query;
+
+    if (!transactionId) {
+      res.status(400).json({
+        success: false,
+        error: 'Transaction ID is required',
+        code: 'MISSING_TRANSACTION_ID',
+      });
+      return;
+    }
+
+    const transaction = await paycrestTransactionService.getTransactionById(
+      transactionId,
+      wallet as string | undefined
+    );
+
+    if (!transaction) {
+      res.status(404).json({
+        success: false,
+        error: 'Transaction not found',
+        code: 'TRANSACTION_NOT_FOUND',
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: transaction,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * Get transaction summary/statistics for a wallet
+ * GET /api/v1/ramp/paycrest/transactions/summary/:wallet
+ * 
+ * Authentication: API Key or JWT
+ */
+router.get('/transactions/summary/:wallet', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { wallet } = req.params;
+
+    if (!wallet) {
+      res.status(400).json({
+        success: false,
+        error: 'Wallet address is required',
+        code: 'MISSING_WALLET',
+      });
+      return;
+    }
+
+    // Validate wallet format
+    if (!/^0x[a-fA-F0-9]{40}$/.test(wallet)) {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid wallet address format',
+        code: 'INVALID_WALLET_FORMAT',
+      });
+      return;
+    }
+
+    const summary = await paycrestTransactionService.getTransactionSummary(wallet);
+
+    res.json({
+      success: true,
+      data: summary,
     });
   } catch (error) {
     next(error);

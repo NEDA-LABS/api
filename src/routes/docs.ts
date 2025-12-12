@@ -103,11 +103,50 @@ const paycrestDocs = `
 </div>
 <div class="endpoint">
   <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/orders</code>
-  <p>List user's payment orders history from local database.</p>
+  <p>List user's payment orders history from local database. <strong>Requires JWT authentication.</strong></p>
 </div>
 <div class="endpoint">
   <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/orders/:orderId</code>
-  <p>Get details of a specific order. Fetches fresh status from Paycrest.</p>
+  <p>Get details of a specific order. Fetches fresh status from Paycrest. <strong>Requires JWT authentication.</strong></p>
+</div>
+
+<h4>Paycrest Transactions (by Wallet Address)</h4>
+<p>Retrieve transaction history using wallet address. <strong>Requires API Key authentication.</strong></p>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/transactions</code>
+  <p>Get Paycrest transactions by wallet address.</p>
+  <p><strong>Query Parameters:</strong></p>
+  <ul>
+    <li><code>wallet</code> (required): Ethereum wallet address (merchantId)</li>
+    <li><code>status</code>: Filter by status (pending, processing, settled, refunded, expired, failed)</li>
+    <li><code>currency</code>: Filter by currency (NGN, KES, GHS, etc.)</li>
+    <li><code>startDate</code>: Start date filter (ISO 8601)</li>
+    <li><code>endDate</code>: End date filter (ISO 8601)</li>
+    <li><code>page</code>: Page number (default: 1)</li>
+    <li><code>pageSize</code>: Items per page (default: 20, max: 100)</li>
+    <li><code>includeSummary</code>: Include summary statistics (true/false)</li>
+  </ul>
+  <p><strong>Example:</strong></p>
+  <pre>GET /api/v1/ramp/paycrest/transactions?wallet=0x123...&status=settled&page=1&pageSize=20</pre>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/transactions/:transactionId</code>
+  <p>Get a single transaction by ID.</p>
+  <p><strong>Query Parameters:</strong></p>
+  <ul>
+    <li><code>wallet</code> (optional): Wallet address for ownership verification</li>
+  </ul>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/paycrest/transactions/summary/:wallet</code>
+  <p>Get transaction summary/statistics for a wallet address.</p>
+  <p><strong>Response includes:</strong></p>
+  <ul>
+    <li><code>totalTransactions</code>: Total transaction count</li>
+    <li><code>totalVolume</code>: Sum of all transaction amounts</li>
+    <li><code>byStatus</code>: Count breakdown by status</li>
+    <li><code>byCurrency</code>: Count and volume breakdown by currency</li>
+  </ul>
 </div>
 
 <h4>Rates & Verification</h4>
