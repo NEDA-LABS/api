@@ -71,6 +71,9 @@ model User {
   
   // cNGN whitelisted addresses
   cngnWhitelistedAddrs  CNGNWhitelistedAddress[]
+
+  // Pretium transactions
+  pretiumTransactions   PretiumTransaction[]
 }
 
 model Referral {
@@ -1382,3 +1385,89 @@ model CNGNWhitelistedAddress {
 }
 
 
+
+// ==================== PRETIUM MODELS ====================
+
+model PretiumTransaction {
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Transaction Identifiers
+  pretiumId         String?           @unique // Pretium's transaction ID (e.g. for disbursement)
+  quoteId           String?           // The quote ID used
+  reference         String?           @unique // Internal or external reference
+
+  // Transaction Details
+  type              PretiumTxType     // DISBURSEMENT (Off-ramp), COLLECTION (On-ramp)
+  status            PretiumTxStatus   @default(PENDING)
+
+  // Amounts
+  sourceAmount      String            // Amount in source currency (e.g. USDT)
+  sourceCurrency    String            // e.g. "USDT"
+  targetAmount      String            // Amount in target currency (e.g. MWK)
+  targetCurrency    String            // e.g. "MWK"
+  exchangeRate      String?           // Exchange rate used
+  fee               String?           // Fee amount
+
+  // Destination/Source Details (Flattened for easier access)
+  destinationType   String?           // "mobile_money", "bank_account"
+  networkCode       String?           // e.g. "AIRTEL_MW"
+  accountNumber     String?           // Recipient account number
+  accountName       String?           // Recipient name
+  country           String?           // e.g. "MW"
+
+  // Blockchain Details (if applicable)
+  txHash            String?           // On-chain transaction hash
+
+  // Metadata
+  metadata          Json?             // Store raw response or additional details
+  errorMessage      String?
+
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  completedAt       DateTime?
+
+  // Relations
+  webhookEvents     PretiumWebhookEvent[]
+
+  @@index([userId])
+  @@index([pretiumId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@map("pretium_transactions")
+}
+
+model PretiumWebhookEvent {
+  id                    String              @id @default(cuid())
+  pretiumTransactionId  String?
+  pretiumTransaction    PretiumTransaction? @relation(fields: [pretiumTransactionId], references: [id], onDelete: SetNull)
+
+  eventType             String              // e.g. "payout.completed", "payout.failed"
+  payload               Json                // Full webhook payload
+  processed             Boolean             @default(false)
+  processedAt           DateTime?
+  errorMessage          String?
+
+  createdAt             DateTime            @default(now())
+
+  @@index([pretiumTransactionId])
+  @@index([eventType])
+  @@index([processed])
+  @@map("pretium_webhook_events")
+}
+
+enum PretiumTxType {
+  DISBURSEMENT  // Off-ramp
+  COLLECTION    // On-ramp
+}
+
+enum PretiumTxStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}

@@ -8,15 +8,15 @@
 import { Router } from 'express';
 import paycrestRoutes from './paycrest.routes.js';
 import idrxRoutes from './idrx.js';
-import yellowcardRoutes from './yellowcard.js';
 import cngnRoutes from './cngn.js';
+import pretiumRoutes from './pretium.routes.js';
 
 const router = Router();
 
 // Mount provider routes
 router.use('/paycrest', paycrestRoutes);  // Off-ramp via Paycrest
 router.use('/idrx', idrxRoutes);          // IDRX on/off-ramp (Indonesia)
-router.use('/yellowcard', yellowcardRoutes); // Yellow Card (Africa)
 router.use('/cngn', cngnRoutes);          // cNGN (Nigeria)
+router.use('/pretium', pretiumRoutes);    // Pretium (Malawi, Congo, Ethiopia, etc.)
 
 export default router;

@@ -75,6 +75,11 @@ const envSchema = z.object({
   PAYCREST_CLIENT_SECRET: z.string().optional(),
   PAYCREST_API_URL: z.string().default('https://api.paycrest.io'),
   
+  // Pretium
+  PRETIUM_BASE_URL: z.string().default('https://api.xwift.africa'),
+  PRETIUM_API_KEY: z.string().optional(),
+  PRETIUM_WEBHOOK_SECRET: z.string().optional(),
+
   // Smile ID
   SMILE_ID_PARTNER_ID: z.string().optional(),
   SMILE_ID_API_KEY: z.string().optional(),
@@ -207,6 +212,11 @@ export const config = {
       clientId: env.PAYCREST_CLIENT_ID,
       clientSecret: env.PAYCREST_CLIENT_SECRET,
       apiUrl: env.PAYCREST_API_URL,
+    },
+    pretium: {
+      baseUrl: env.PRETIUM_BASE_URL,
+      apiKey: env.PRETIUM_API_KEY,
+      webhookSecret: env.PRETIUM_WEBHOOK_SECRET,
     },
     smileId: {
       partnerId: env.SMILE_ID_PARTNER_ID,

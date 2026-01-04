@@ -206,6 +206,90 @@ const paycrestDocs = `
 <p>Transactions are stored in <code>OffRampTransaction</code> table. Webhooks are logged in <code>WebhookLog</code>.</p>
 `;
 
+const pretiumDocs = `
+<h2 id="pretium">Pretium Integration (On/Off-Ramp) <span class="badge completed">Completed</span></h2>
+<p>Integration with Pretium API for African markets (MWK, CDF, ETB, GHS, UGX, KES).</p>
+
+<h3>Configuration</h3>
+<table>
+  <tr>
+    <th>Variable</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>PRETIUM_BASE_URL</code></td>
+    <td>Base URL for Pretium API</td>
+  </tr>
+  <tr>
+    <td><code>PRETIUM_API_KEY</code></td>
+    <td>API Key for authentication</td>
+  </tr>
+  <tr>
+    <td><code>PRETIUM_WEBHOOK_SECRET</code></td>
+    <td>Secret for webhook verification</td>
+  </tr>
+</table>
+
+<h3>API Endpoints</h3>
+
+<h4>Quotes & Rates</h4>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/quote</code>
+  <p>Get a quote for a transaction.</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/rates</code>
+  <p>Get exchange rates (USD base).</p>
+</div>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/exchange-rate</code>
+  <p>Get exchange rate for a specific currency code.</p>
+</div>
+
+<h4>On-Ramp (Deposit)</h4>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/onramp</code>
+  <p>Initiate a mobile money deposit.</p>
+</div>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/status</code>
+  <p>Check transaction status (On-Ramp).</p>
+</div>
+
+<h4>Off-Ramp (Disbursement)</h4>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/disburse</code>
+  <p>Initiate a disbursement (payout).</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/disburse/:id</code>
+  <p>Get disbursement status.</p>
+</div>
+
+<h4>Transactions</h4>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/transactions</code>
+  <p>Get transaction history. Supports pagination and filtering.</p>
+  <p><strong>Query Parameters:</strong></p>
+  <ul>
+    <li><code>type</code>: COLLECTION or DISBURSEMENT</li>
+    <li><code>status</code>: Transaction status</li>
+    <li><code>page</code>: Page number (default 1)</li>
+    <li><code>limit</code>: Items per page (default 20)</li>
+  </ul>
+</div>
+
+<h4>Utilities</h4>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/networks</code>
+  <p>Get supported networks and countries.</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/account</code>
+  <p>Get Pretium account details.</p>
+</div>
+`;
+
 const idrxDocs = `
 <h2 id="idrx">IDRX Integration (On/Off-Ramp) <span class="badge pending">In Progress</span></h2>
 <p>Integration with IDRX for Indonesian Rupiah (IDR) on-ramp and off-ramp operations.</p>
@@ -250,6 +334,87 @@ const idrxDocs = `
 </div>
 `;
 
+const yellowCardDocs = `
+<h2 id="yellowcard">Yellow Card Integration (On/Off-Ramp) <span class="badge completed">Completed</span></h2>
+<p>Direct integration with Yellow Card for African markets (NGN, KES, GHS, ZAR, etc.). Supports both collections (on-ramp) and payments (off-ramp) via crypto settlement.</p>
+
+<h3>Configuration</h3>
+<table>
+  <tr>
+    <th>Variable</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>YELLOWCARD_API_URL</code></td>
+    <td>Base URL for Yellow Card API (Sandbox/Production)</td>
+  </tr>
+  <tr>
+    <td><code>YELLOWCARD_API_KEY</code></td>
+    <td>API Key for authentication</td>
+  </tr>
+  <tr>
+    <td><code>YELLOWCARD_SECRET_KEY</code></td>
+    <td>Secret Key for request signing and webhook verification</td>
+  </tr>
+</table>
+
+<h3>API Endpoints</h3>
+
+<h4>Information & Rates</h4>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/channels</code>
+  <p>Get available payment channels.</p>
+  <p><strong>Query Parameters:</strong></p>
+  <ul>
+    <li><code>country</code>: Filter by country code (e.g. NG, KE)</li>
+    <li><code>type</code>: collection (on-ramp) or payment (off-ramp)</li>
+  </ul>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/networks</code>
+  <p>Get available networks (banks, mobile money).</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/rates</code>
+  <p>Get exchange rates.</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/crypto-channels</code>
+  <p>Get supported cryptocurrencies and networks.</p>
+  <p><strong>Query Parameters:</strong></p>
+  <ul>
+    <li><code>evm_only</code>: boolean (default true)</li>
+    <li><code>l2_only</code>: boolean (default false)</li>
+  </ul>
+</div>
+
+<h4>Collection (On-Ramp)</h4>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/yellowcard/collection</code>
+  <p>Create a collection request (Fiat -> Crypto).</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/collection</code>
+  <p>Get collection status by ID.</p>
+</div>
+
+<h4>Payment (Off-Ramp)</h4>
+<div class="endpoint">
+  <span class="method post">POST</span> <code>/api/v1/ramp/yellowcard/payment</code>
+  <p>Create a payment request (Crypto -> Fiat).</p>
+</div>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/payment</code>
+  <p>Get payment status by ID.</p>
+</div>
+
+<h4>Transactions</h4>
+<div class="endpoint">
+  <span class="method get">GET</span> <code>/api/v1/ramp/yellowcard/transactions</code>
+  <p>Get transaction history.</p>
+</div>
+`;
+
 router.get('/', (_req, res) => {
   const html = `
 <!DOCTYPE html>
@@ -266,6 +431,7 @@ router.get('/', (_req, res) => {
     <a href="#overview">Overview</a>
     <a href="#apps">Apps & Keys</a>
     <a href="#paycrest">Paycrest</a>
+    <a href="#pretium">Pretium</a>
     <a href="#idrx">IDRX</a>
     <a href="#yellowcard">Yellow Card</a>
   </div>
@@ -276,11 +442,12 @@ router.get('/', (_req, res) => {
   ${appsDocs}
 
   ${paycrestDocs}
+
+  ${pretiumDocs}
   
   ${idrxDocs}
 
-  <h2 id="yellowcard">Yellow Card <span class="badge pending">Pending</span></h2>
-  <p>Migration pending.</p>
+  ${yellowCardDocs}
 
   <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; color: #888; font-size: 0.9em;">
     Generated by NedaPay Backend Migration

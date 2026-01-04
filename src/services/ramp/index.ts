@@ -38,6 +38,23 @@ export { idrxService } from './idrx/service.js';
 export { idrxSyncService } from './idrx/sync.service.js';
 export * from './idrx/types.js';
 
+// Pretium (On/Off-ramp)
+export { pretiumService } from './pretium.service.js';
+export type {
+  PretiumResponse,
+  PretiumQuoteRequest,
+  PretiumQuoteResponse,
+  PretiumExchangeRateRequest,
+  PretiumExchangeRateResponse,
+  PretiumAsset,
+  PretiumOnrampRequest,
+  PretiumOnrampResponse,
+  PretiumStatusResponse,
+  PretiumDisbursementRequest,
+  PretiumDisbursementResponse,
+  PretiumNetwork
+} from './pretium.service.js';
+
 // TODO: Add other provider services as they are implemented
 // export { yellowcardService } from './yellowcard.service.js';
 // export { cngnService } from './cngn.service.js';
