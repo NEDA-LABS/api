@@ -44,10 +44,11 @@ export function createApp(): Application {
 
   // CORS - Cross-Origin Resource Sharing
   app.use(cors({
-    origin: config.cors.origins,
+    origin: true, // Allow all origins (development and production)
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'x-api-key'],
+    exposedHeaders: ['X-Request-ID'],
   }));
 
   // ==========================================================================
