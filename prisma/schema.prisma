@@ -1391,7 +1391,7 @@ model CNGNWhitelistedAddress {
 model PretiumTransaction {
   id                String            @id @default(cuid())
   userId            String
-  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Transaction Identifiers
   pretiumId         String?           @unique // Pretium's transaction ID (e.g. for disbursement)

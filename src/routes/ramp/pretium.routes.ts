@@ -102,7 +102,7 @@ router.get('/rates', async (req: Request, res: Response, next: NextFunction) => 
 router.post('/onramp', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { currency_code, shortcode, amount, mobile_network, chain, asset, address } = req.body;
-    const userId = req.user!.id;
+    const userId = req.user?.id; // Optional - may be undefined for app-level API keys
 
     // Call Pretium API
     const result = await pretiumService.createOnramp({
@@ -119,11 +119,12 @@ router.post('/onramp', apiKeyAuth, async (req: Request, res: Response, next: Nex
       return res.status(result.code || 400).json(result);
     }
 
-    // Record transaction in DB
-    try {
-      await prisma.pretiumTransaction.create({
-        data: {
-          userId,
+    // Record transaction in DB (only if userId exists)
+    if (userId) {
+      try {
+        await prisma.pretiumTransaction.create({
+          data: {
+            userId,
           pretiumId: result.data?.transaction_code, // Use transaction_code as pretiumId for onramp
           type: 'COLLECTION',
           status: 'PENDING',
@@ -140,14 +141,16 @@ router.post('/onramp', apiKeyAuth, async (req: Request, res: Response, next: Nex
           
           metadata: result.data ? JSON.parse(JSON.stringify(result.data)) : undefined,
         }
-      });
-    } catch (dbError) {
-      logger.error('Failed to save Pretium on-ramp transaction', dbError);
-      // Don't fail the request if DB save fails, but log it
+        });
+      } catch (dbError) {
+        logger.error('Failed to save Pretium on-ramp transaction', dbError);
+        // Don't fail the request if DB save fails, but log it
+      }
     }
 
     logger.info('Pretium on-ramp initiated', {
-      userId,
+      userId: userId || 'anonymous',
+      walletAddress: address,
       transactionCode: result.data?.transaction_code,
       amount,
       currency: currency_code
