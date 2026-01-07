@@ -120,6 +120,11 @@ export interface PretiumNetwork {
   country: string;
 }
 
+export interface PretiumSupportedFiatCurrency {
+  country: string; // ISO country code (e.g. "KE")
+  currency_code: string; // ISO currency code (e.g. "KES")
+}
+
 export const SUPPORTED_COUNTRIES = {
   MW: 'Malawi',
   CD: 'DR Congo',
@@ -129,6 +134,15 @@ export const SUPPORTED_COUNTRIES = {
   GH: 'Ghana',
   UG: 'Uganda',
 };
+
+export const SUPPORTED_FIAT_CURRENCIES: PretiumSupportedFiatCurrency[] = [
+  { country: 'MW', currency_code: 'MWK' },
+  { country: 'CD', currency_code: 'CDF' },
+  { country: 'ET', currency_code: 'ETB' },
+  { country: 'KE', currency_code: 'KES' },
+  { country: 'GH', currency_code: 'GHS' },
+  { country: 'UG', currency_code: 'UGX' },
+];
 
 export const PRETIUM_NETWORKS: Record<string, PretiumNetwork[]> = {
   MW: [

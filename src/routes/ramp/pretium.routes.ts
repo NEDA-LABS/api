@@ -6,7 +6,7 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { authenticate } from '../../middleware/auth.js';
-import { pretiumService, PRETIUM_NETWORKS, SUPPORTED_COUNTRIES } from '../../services/ramp/pretium.service.js';
+import { pretiumService, PRETIUM_NETWORKS, SUPPORTED_COUNTRIES, SUPPORTED_FIAT_CURRENCIES } from '../../services/ramp/pretium.service.js';
 import { prisma } from '../../repositories/prisma.js';
 import { logger } from '../../utils/logger.js';
 
@@ -49,7 +49,26 @@ router.post('/exchange-rate', authenticate, async (req: Request, res: Response, 
   try {
     const { currency_code } = req.body;
     const result = await pretiumService.getExchangeRate(currency_code);
-    return res.json(result);
+    if (result.status === 'error') {
+      return res.status(result.code || result.statusCode || 400).json(result);
+    }
+
+    const data: any = result.data;
+    const buying = Number(data?.buying_rate);
+    const selling = Number(data?.selling_rate);
+    const existingQuoted = Number(data?.quoted_rate);
+
+    const quoted_rate = Number.isFinite(existingQuoted) && existingQuoted > 0
+      ? existingQuoted
+      : (Number.isFinite(buying) && Number.isFinite(selling) ? (buying + selling) / 2 : undefined);
+
+    return res.json({
+      ...result,
+      data: {
+        ...(data || {}),
+        ...(quoted_rate !== undefined ? { quoted_rate } : {})
+      }
+    });
   } catch (error) {
     return next(error);
   }
@@ -63,6 +82,9 @@ router.get('/rates', async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { base } = req.query;
     const result = await pretiumService.getRates(base as string);
+    if (result.status === 'error') {
+      return res.status(result.code || result.statusCode || 400).json(result);
+    }
     return res.json(result);
   } catch (error) {
     return next(error);
@@ -145,6 +167,10 @@ router.post('/status', authenticate, async (req: Request, res: Response, next: N
   try {
     const { currency_code, transaction_code } = req.body;
     const result = await pretiumService.getStatus(currency_code, transaction_code);
+
+    if (result.status === 'error') {
+      return res.status(result.code || result.statusCode || 400).json(result);
+    }
 
     // If status is complete/failed, update local DB if needed
     // In a real scenario, we might want to sync the status here if webhook missed it
@@ -367,7 +393,8 @@ router.get('/networks', async (req: Request, res: Response) => {
     message: 'success',
     data: {
       networks: PRETIUM_NETWORKS,
-      countries: SUPPORTED_COUNTRIES
+      countries: SUPPORTED_COUNTRIES,
+      currencies: SUPPORTED_FIAT_CURRENCIES
     }
   });
 });
@@ -379,6 +406,9 @@ router.get('/networks', async (req: Request, res: Response) => {
 router.get('/account', authenticate, async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await pretiumService.getAccountDetail();
+    if (result.status === 'error') {
+      return res.status(result.code || result.statusCode || 400).json(result);
+    }
     return res.json(result);
   } catch (error) {
     return next(error);
