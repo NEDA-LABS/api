@@ -33,14 +33,6 @@ export function createApp(): Application {
   const app = express();
 
   // ==========================================================================
-  // Trust Proxy Configuration
-  // ==========================================================================
-  
-  // Enable trust proxy for apps behind reverse proxies (Vercel, Netlify, etc.)
-  // This allows Express to correctly identify client IPs from X-Forwarded-For header
-  app.set('trust proxy', true);
-
-  // ==========================================================================
   // Security Middleware
   // ==========================================================================
   
