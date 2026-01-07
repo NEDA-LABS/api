@@ -615,7 +615,7 @@ const pretiumDocs = `
 <h3>API Endpoints</h3>
 
 <!-- ===================== UTILITIES ===================== -->
-<h4>Utilities (No Auth Required for /networks)</h4>
+<h4>Utilities</h4>
 
 <div class="endpoint">
   <div class="endpoint-header">
@@ -623,7 +623,7 @@ const pretiumDocs = `
     <span class="endpoint-path">/api/v1/ramp/pretium/networks</span>
     <button class="try-it-btn" onclick="toggleTester('pretium-networks')">Try It</button>
   </div>
-  <p>Get all supported countries, currencies, and mobile money networks. Use this to populate country/network selectors.</p>
+  <p>Get all supported countries, currencies, and mobile money networks. Use this to populate country/network selectors. <strong>Auth required.</strong></p>
   <p><strong>Query Parameters (optional):</strong></p>
   <ul>
     <li><code>country</code>: ISO country code (e.g., <code>MW</code>, <code>KE</code>) to filter networks for a specific country</li>
@@ -661,16 +661,34 @@ const pretiumDocs = `
 </div>
 
 <div class="endpoint">
-  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/account</code>
+  <div class="endpoint-header">
+    <span class="method get">GET</span>
+    <span class="endpoint-path">/api/v1/ramp/pretium/account</span>
+    <button class="try-it-btn" onclick="toggleTester('pretium-account')">Try It</button>
+  </div>
   <p>Get Pretium account details including settlement wallet addresses per chain. <strong>Auth required.</strong></p>
+  
+  <div id="pretium-account" class="api-tester" style="display: none;">
+    <div class="api-tester-header">Test this endpoint</div>
+    <p style="margin-bottom: 1rem; color: var(--text-secondary);">No parameters required - just click Send Request</p>
+    <button class="btn btn-primary" id="pretium-account-submit" onclick="makeApiCall('pretium-account', 'GET', '/api/v1/ramp/pretium/account')">Send Request</button>
+    <div id="pretium-account-response" class="api-response" style="display: none;"></div>
+  </div>
+  
   <p><strong>Response:</strong></p>
   <pre>{
   "status": "success",
   "statusCode": 200,
   "data": {
     "networks": [
-      { "name": "Base", "settlement_wallet_address": "0x..." },
-      { "name": "Celo", "settlement_wallet_address": "0x..." }
+      {
+        "name": "BASE",
+        "settlement_wallet_address": "0x..."
+      },
+      {
+        "name": "POLYGON",
+        "settlement_wallet_address": "0x..."
+      }
     ]
   }
 }</pre>
@@ -714,7 +732,11 @@ const pretiumDocs = `
 </div>
 
 <div class="endpoint">
-  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/quote</code>
+  <div class="endpoint-header">
+    <span class="method post">POST</span>
+    <span class="endpoint-path">/api/v1/ramp/pretium/quote</span>
+    <button class="try-it-btn" onclick="toggleTester('pretium-quote')">Try It</button>
+  </div>
   <p>Get a quote for a transaction (off-ramp). <strong>Auth required.</strong></p>
   <p><strong>Request Body:</strong></p>
   <pre>{
@@ -723,6 +745,17 @@ const pretiumDocs = `
   "amount": 100,              // Amount in source currency
   "type": "source"            // "source" or "target"
 }</pre>
+  
+  <div id="pretium-quote" class="api-tester" style="display: none;">
+    <div class="api-tester-header">Test this endpoint</div>
+    <div class="form-group">
+      <label class="form-label">Request Body (JSON)</label>
+      <textarea id="pretium-quote-body" class="form-textarea" placeholder='{"source_currency": "USDT", "target_currency": "MWK", "amount": 100, "type": "source"}'>{"source_currency": "USDT", "target_currency": "MWK", "amount": 100, "type": "source"}</textarea>
+    </div>
+    <button class="btn btn-primary" id="pretium-quote-submit" onclick="makeApiCall('pretium-quote', 'POST', '/api/v1/ramp/pretium/quote')">Send Request</button>
+    <div id="pretium-quote-response" class="api-response" style="display: none;"></div>
+  </div>
+  
   <p><strong>Response:</strong></p>
   <pre>{
   "status": "success",
@@ -748,7 +781,11 @@ const pretiumDocs = `
 <p>Flow: User pays via mobile money → Receives stablecoin (USDC/USDT) to wallet.</p>
 
 <div class="endpoint">
-  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/onramp</code>
+  <div class="endpoint-header">
+    <span class="method post">POST</span>
+    <span class="endpoint-path">/api/v1/ramp/pretium/onramp</span>
+    <button class="try-it-btn" onclick="toggleTester('pretium-onramp')">Try It</button>
+  </div>
   <p>Initiate a mobile money deposit. Sends STK push to user's phone. <strong>Auth required.</strong></p>
   <p><strong>Request Body:</strong></p>
   <pre>{
@@ -760,6 +797,17 @@ const pretiumDocs = `
   "asset": "USDC",                // USDC or USDT
   "address": "0x..."              // Recipient wallet address
 }</pre>
+  
+  <div id="pretium-onramp" class="api-tester" style="display: none;">
+    <div class="api-tester-header">Test this endpoint</div>
+    <div class="form-group">
+      <label class="form-label">Request Body (JSON)</label>
+      <textarea id="pretium-onramp-body" class="form-textarea" placeholder='{"currency_code": "KES", "shortcode": "254712345678", "amount": 1000, "mobile_network": "Safaricom", "chain": "BASE", "asset": "USDC", "address": "0x..."}'>{"currency_code": "KES", "shortcode": "254712345678", "amount": 1000, "mobile_network": "Safaricom", "chain": "BASE", "asset": "USDC", "address": "0x..."}</textarea>
+    </div>
+    <button class="btn btn-primary" id="pretium-onramp-submit" onclick="makeApiCall('pretium-onramp', 'POST', '/api/v1/ramp/pretium/onramp')">Send Request</button>
+    <div id="pretium-onramp-response" class="api-response" style="display: none;"></div>
+  </div>
+  
   <p><strong>Response:</strong></p>
   <pre>{
   "status": "success",
@@ -773,13 +821,28 @@ const pretiumDocs = `
 </div>
 
 <div class="endpoint">
-  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/status</code>
+  <div class="endpoint-header">
+    <span class="method post">POST</span>
+    <span class="endpoint-path">/api/v1/ramp/pretium/status</span>
+    <button class="try-it-btn" onclick="toggleTester('pretium-status')">Try It</button>
+  </div>
   <p>Check on-ramp transaction status. Poll this after initiating deposit. <strong>Auth required.</strong></p>
   <p><strong>Request Body:</strong></p>
   <pre>{
   "currency_code": "KES",
   "transaction_code": "TXN123456789"
 }</pre>
+  
+  <div id="pretium-status" class="api-tester" style="display: none;">
+    <div class="api-tester-header">Test this endpoint</div>
+    <div class="form-group">
+      <label class="form-label">Request Body (JSON)</label>
+      <textarea id="pretium-status-body" class="form-textarea" placeholder='{"currency_code": "KES", "transaction_code": "TXN123456789"}'>{"currency_code": "KES", "transaction_code": "TXN123456789"}</textarea>
+    </div>
+    <button class="btn btn-primary" id="pretium-status-submit" onclick="makeApiCall('pretium-status', 'POST', '/api/v1/ramp/pretium/status')">Send Request</button>
+    <div id="pretium-status-response" class="api-response" style="display: none;"></div>
+  </div>
+  
   <p><strong>Response:</strong></p>
   <pre>{
   "status": "success",
@@ -805,7 +868,11 @@ const pretiumDocs = `
 <p>Flow: User sends stablecoin to settlement wallet → Receives fiat via mobile money.</p>
 
 <div class="endpoint">
-  <span class="method post">POST</span> <code>/api/v1/ramp/pretium/disburse</code>
+  <div class="endpoint-header">
+    <span class="method post">POST</span>
+    <span class="endpoint-path">/api/v1/ramp/pretium/disburse</span>
+    <button class="try-it-btn" onclick="toggleTester('pretium-disburse')">Try It</button>
+  </div>
   <p>Initiate a disbursement (payout) after on-chain transfer. <strong>Auth required.</strong></p>
   <p><strong>Request Body:</strong></p>
   <pre>{
@@ -821,6 +888,17 @@ const pretiumDocs = `
     "country": "KE"               // ISO country code
   }
 }</pre>
+  
+  <div id="pretium-disburse" class="api-tester" style="display: none;">
+    <div class="api-tester-header">Test this endpoint</div>
+    <div class="form-group">
+      <label class="form-label">Request Body (JSON)</label>
+      <textarea id="pretium-disburse-body" class="form-textarea" placeholder='{"quote_id": "...", "transaction_hash": "0x...", "chain": "BASE", "target_amount": 172050, "destination": {...}}'>{"quote_id": "mock-quote-id-1234567890", "transaction_hash": "0x...", "chain": "BASE", "target_amount": 172050, "destination": {"type": "mobile_money", "account_number": "254712345678", "account_name": "John Doe", "network_code": "Safaricom", "country": "KE"}}</textarea>
+    </div>
+    <button class="btn btn-primary" id="pretium-disburse-submit" onclick="makeApiCall('pretium-disburse', 'POST', '/api/v1/ramp/pretium/disburse')">Send Request</button>
+    <div id="pretium-disburse-response" class="api-response" style="display: none;"></div>
+  </div>
+  
   <p><strong>Response:</strong></p>
   <pre>{
   "status": "success",
@@ -854,7 +932,11 @@ const pretiumDocs = `
 <h4>Transactions</h4>
 
 <div class="endpoint">
-  <span class="method get">GET</span> <code>/api/v1/ramp/pretium/transactions</code>
+  <div class="endpoint-header">
+    <span class="method get">GET</span>
+    <span class="endpoint-path">/api/v1/ramp/pretium/transactions</span>
+    <button class="try-it-btn" onclick="toggleTester('pretium-transactions')">Try It</button>
+  </div>
   <p>Get user's Pretium transaction history. <strong>Auth required.</strong></p>
   <p><strong>Query Parameters:</strong></p>
   <ul>
@@ -863,6 +945,28 @@ const pretiumDocs = `
     <li><code>page</code>: Page number (default: 1)</li>
     <li><code>limit</code>: Items per page (default: 20)</li>
   </ul>
+  
+  <div id="pretium-transactions" class="api-tester" style="display: none;">
+    <div class="api-tester-header">Test this endpoint</div>
+    <div class="form-group">
+      <label class="form-label">Type (optional)</label>
+      <input type="text" id="pretium-transactions-type" class="form-input" placeholder="COLLECTION or DISBURSEMENT" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status (optional)</label>
+      <input type="text" id="pretium-transactions-status" class="form-input" placeholder="PENDING, PROCESSING, COMPLETED, FAILED" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Page (optional)</label>
+      <input type="number" id="pretium-transactions-page" class="form-input" placeholder="1" value="1" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Limit (optional)</label>
+      <input type="number" id="pretium-transactions-limit" class="form-input" placeholder="20" value="20" />
+    </div>
+    <button class="btn btn-primary" id="pretium-transactions-submit" onclick="testPretiumTransactions()">Send Request</button>
+    <div id="pretium-transactions-response" class="api-response" style="display: none;"></div>
+  </div>
   <p><strong>Response:</strong></p>
   <pre>{
   "success": true,
@@ -1226,7 +1330,7 @@ router.get('/', (_req, res) => {
 
     async function makeApiCall(endpointId, method, path, requiresAuth = true, bodyTemplate = null) {
       const apiKey = getApiKey();
-      if (requiresAuth && !apiKey) {
+      if (!apiKey) {
         showToast('Please configure your API key first', 'error');
         return;
       }
@@ -1244,12 +1348,9 @@ router.get('/', (_req, res) => {
 
       try {
         const headers = {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey
         };
-        
-        if (requiresAuth && apiKey) {
-          headers['x-api-key'] = apiKey;
-        }
 
         const options = {
           method: method,
@@ -1295,6 +1396,12 @@ router.get('/', (_req, res) => {
 
     // Pretium Networks endpoint tester
     async function testPretiumNetworks() {
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        showToast('Please configure your API key first', 'error');
+        return;
+      }
+
       const countryInput = document.getElementById('pretium-networks-country');
       const country = countryInput.value.trim();
       
@@ -1314,7 +1421,70 @@ router.get('/', (_req, res) => {
 
       try {
         const url = API_BASE_URL + path;
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'x-api-key': apiKey
+          }
+        });
+        const data = await response.json();
+
+        responseDiv.textContent = JSON.stringify(data, null, 2);
+        responseDiv.className = 'api-response ' + (response.ok ? 'response-success' : 'response-error');
+        
+        showToast(
+          response.ok ? 'Request successful' : \`Request failed: \${response.status}\`,
+          response.ok ? 'success' : 'error'
+        );
+
+      } catch (error) {
+        responseDiv.textContent = 'Error: ' + error.message;
+        responseDiv.className = 'api-response response-error';
+        showToast('Request failed: ' + error.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Request';
+      }
+    }
+
+    // Pretium Transactions endpoint tester
+    async function testPretiumTransactions() {
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        showToast('Please configure your API key first', 'error');
+        return;
+      }
+
+      const typeInput = document.getElementById('pretium-transactions-type');
+      const statusInput = document.getElementById('pretium-transactions-status');
+      const pageInput = document.getElementById('pretium-transactions-page');
+      const limitInput = document.getElementById('pretium-transactions-limit');
+      
+      let path = '/api/v1/ramp/pretium/transactions?';
+      const params = [];
+      
+      if (typeInput.value.trim()) params.push('type=' + encodeURIComponent(typeInput.value.trim()));
+      if (statusInput.value.trim()) params.push('status=' + encodeURIComponent(statusInput.value.trim()));
+      if (pageInput.value) params.push('page=' + encodeURIComponent(pageInput.value));
+      if (limitInput.value) params.push('limit=' + encodeURIComponent(limitInput.value));
+      
+      path += params.join('&');
+
+      const responseDiv = document.getElementById('pretium-transactions-response');
+      const submitBtn = document.getElementById('pretium-transactions-submit');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading-spinner"></span> Sending...';
+      responseDiv.style.display = 'block';
+      responseDiv.innerHTML = 'Loading...';
+      responseDiv.className = 'api-response';
+
+      try {
+        const url = API_BASE_URL + path;
+        const response = await fetch(url, {
+          headers: {
+            'x-api-key': apiKey
+          }
+        });
         const data = await response.json();
 
         responseDiv.textContent = JSON.stringify(data, null, 2);
@@ -1338,6 +1508,7 @@ router.get('/', (_req, res) => {
 </body>
 </html>
   `;
+
   res.send(html);
 });
 

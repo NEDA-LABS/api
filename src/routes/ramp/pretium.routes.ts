@@ -5,7 +5,7 @@
  */
 
 import { Router, Request, Response, NextFunction } from 'express';
-import { authenticate } from '../../middleware/auth.js';
+import { apiKeyAuth } from '../../middleware/apiKeyAuth.js';
 import { pretiumService, PRETIUM_NETWORKS, SUPPORTED_COUNTRIES, SUPPORTED_FIAT_CURRENCIES } from '../../services/ramp/pretium.service.js';
 import { prisma } from '../../repositories/prisma.js';
 import { logger } from '../../utils/logger.js';
@@ -20,7 +20,7 @@ const router = Router();
  * Get a quote for a transaction
  * POST /api/v1/ramp/pretium/quote
  */
-router.post('/quote', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/quote', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { source_currency, target_currency, amount, type } = req.body;
 
@@ -45,7 +45,7 @@ router.post('/quote', authenticate, async (req: Request, res: Response, next: Ne
  * Get exchange rate for specific currency (On-Ramp)
  * POST /api/v1/ramp/pretium/exchange-rate
  */
-router.post('/exchange-rate', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/exchange-rate', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { currency_code } = req.body;
     const result = await pretiumService.getExchangeRate(currency_code);
@@ -99,7 +99,7 @@ router.get('/rates', async (req: Request, res: Response, next: NextFunction) => 
  * Create an on-ramp transaction
  * POST /api/v1/ramp/pretium/onramp
  */
-router.post('/onramp', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/onramp', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { currency_code, shortcode, amount, mobile_network, chain, asset, address } = req.body;
     const userId = req.user!.id;
@@ -163,7 +163,7 @@ router.post('/onramp', authenticate, async (req: Request, res: Response, next: N
  * Get transaction status (On-Ramp)
  * POST /api/v1/ramp/pretium/status
  */
-router.post('/status', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/status', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { currency_code, transaction_code } = req.body;
     const result = await pretiumService.getStatus(currency_code, transaction_code);
@@ -205,7 +205,7 @@ router.post('/status', authenticate, async (req: Request, res: Response, next: N
  * Create a disbursement (off-ramp)
  * POST /api/v1/ramp/pretium/disburse
  */
-router.post('/disburse', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/disburse', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { 
       quote_id, 
@@ -280,7 +280,7 @@ router.post('/disburse', authenticate, async (req: Request, res: Response, next:
  * Get disbursement status
  * GET /api/v1/ramp/pretium/disburse/:id
  */
-router.get('/disburse/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.get('/disburse/:id', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -301,7 +301,7 @@ router.get('/disburse/:id', authenticate, async (req: Request, res: Response, ne
  * Get Pretium transactions
  * GET /api/v1/ramp/pretium/transactions
  */
-router.get('/transactions', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+router.get('/transactions', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.id;
     const { type, status, page = 1, limit = 20 } = req.query;
@@ -364,7 +364,7 @@ router.get('/transactions', authenticate, async (req: Request, res: Response, ne
  * Get supported networks
  * GET /api/v1/ramp/pretium/networks
  */
-router.get('/networks', async (req: Request, res: Response) => {
+router.get('/networks', apiKeyAuth, async (req: Request, res: Response) => {
   const { country } = req.query;
 
   if (country && typeof country === 'string') {
@@ -403,7 +403,7 @@ router.get('/networks', async (req: Request, res: Response) => {
  * Get account detail
  * GET /api/v1/ramp/pretium/account
  */
-router.get('/account', authenticate, async (_req: Request, res: Response, next: NextFunction) => {
+router.get('/account', apiKeyAuth, async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await pretiumService.getAccountDetail();
     if (result.status === 'error') {
