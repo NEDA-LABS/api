@@ -146,7 +146,7 @@ export const SUPPORTED_FIAT_CURRENCIES: PretiumSupportedFiatCurrency[] = [
 
 export const PRETIUM_NETWORKS: Record<string, PretiumNetwork[]> = {
   MW: [
-    { code: 'Airtel Money', name: 'Airtel Money', type: 'mobile_money', country: 'MW' },
+    { code: 'Airtel', name: 'Airtel', type: 'mobile_money', country: 'MW' },
     { code: 'TNM Mpamba', name: 'TNM Mpamba', type: 'mobile_money', country: 'MW' },
   ],
   CD: [
@@ -164,9 +164,9 @@ export const PRETIUM_NETWORKS: Record<string, PretiumNetwork[]> = {
     { code: 'Airtel', name: 'Airtel', type: 'mobile_money', country: 'KE' },
   ],
   GH: [
-    { code: 'MTN MoMo', name: 'MTN MoMo', type: 'mobile_money', country: 'GH' },
-    { code: 'AirtelTigo Money', name: 'AirtelTigo Money', type: 'mobile_money', country: 'GH' },
-    { code: 'Telecel Cash', name: 'Telecel Cash', type: 'mobile_money', country: 'GH' },
+    { code: 'MTN', name: 'MTN', type: 'mobile_money', country: 'GH' },
+    { code: 'AirtelTigo', name: 'AirtelTigo', type: 'mobile_money', country: 'GH' },
+    { code: 'Telecel', name: 'Telecel', type: 'mobile_money', country: 'GH' },
   ],
   UG: [
     { code: 'MTN', name: 'MTN', type: 'mobile_money', country: 'UG' },
