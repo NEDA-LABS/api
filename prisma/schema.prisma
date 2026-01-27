@@ -74,6 +74,9 @@ model User {
 
   // Pretium transactions
   pretiumTransactions   PretiumTransaction[]
+
+  // Snaville transactions
+  snavilleTransactions  SnavilleTransaction[]
 }
 
 model Referral {
@@ -1470,4 +1473,120 @@ enum PretiumTxStatus {
   COMPLETED
   FAILED
   CANCELLED
+}
+
+// ============================================================================
+// SNAVILLE - Tanzania USDT On-ramp/Off-ramp via Mobile Money
+// ============================================================================
+
+model SnavilleTransaction {
+  id                  String              @id @default(cuid())
+  userId              String?
+  user                User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Order Identifiers
+  snavilleOrderId     String?             @unique // Snaville's internal order ID
+  orderNumber         String              @unique // Order number for tracking (e.g., "SN-ABC123")
+  partnerOrderId      String              @unique // Our generated order ID (e.g., "NEDA-ABC123")
+
+  // Order Type & Status
+  type                SnavilleTxType
+  status              SnavilleTxStatus    @default(PENDING)
+
+  // Amounts
+  amountUsdt          Decimal             @db.Decimal(18, 6)
+  amountTzs           Decimal             @db.Decimal(18, 2)
+  rate                Decimal             @db.Decimal(18, 4) // TZS per USDT
+
+  // Payment Details (for buy orders)
+  paymentMethodId     String?             // e.g., 'mpesa', 'tigopesa'
+  paymentProvider     String?             // e.g., 'M-Pesa', 'Tigo Pesa'
+  paymentAccountNumber String?
+  paymentAccountName  String?
+  transactionId       String?             // Mobile money transaction ID
+
+  // Crypto Details
+  destinationAddress  String?             // Wallet address for buy orders
+  network             SnavilleNetwork     @default(BEP20)
+  txHash              String?             // Blockchain transaction hash
+  explorerUrl         String?
+
+  // User Info
+  userFullName        String?
+  userPhone           String?
+
+  // Payout Details (for sell orders)
+  recipientPhone      String?
+  payoutTransactionId String?
+
+  // Timestamps
+  expiresAt           DateTime?
+  completedAt         DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  // Webhook events for this transaction
+  webhookEvents       SnavilleWebhookEvent[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@map("snaville_transactions")
+}
+
+model SnavilleWebhookEvent {
+  id              String              @id @default(cuid())
+  
+  // Link to transaction (optional - some webhooks may not have a transaction yet)
+  transactionId   String?
+  transaction     SnavilleTransaction? @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  // Webhook Data
+  event           String              // e.g., 'order.completed', 'order.failed', 'order.expired'
+  orderNumber     String?             // Order number from webhook payload
+  partnerOrderId  String?             // Our partner order ID
+  snavilleOrderId String?             // Snaville's order ID
+
+  // Raw payload for debugging
+  payload         Json
+
+  // Processing status
+  processed       Boolean             @default(false)
+  processedAt     DateTime?
+  error           String?             // Error message if processing failed
+
+  // Signature verification
+  signature       String?             // X-Webhook-Signature header
+  verified        Boolean             @default(false)
+
+  // Timestamps
+  receivedAt      DateTime            @default(now())
+  createdAt       DateTime            @default(now())
+
+  @@index([transactionId])
+  @@index([event])
+  @@index([orderNumber])
+  @@index([processed])
+  @@index([receivedAt])
+  @@map("snaville_webhook_events")
+}
+
+enum SnavilleTxType {
+  BUY   // On-ramp: TZS -> USDT
+  SELL  // Off-ramp: USDT -> TZS
+}
+
+enum SnavilleTxStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  EXPIRED
+  CANCELLED
+}
+
+enum SnavilleNetwork {
+  BEP20  // BSC
+  TRC20  // Tron
 }

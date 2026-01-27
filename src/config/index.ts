@@ -80,6 +80,11 @@ const envSchema = z.object({
   PRETIUM_API_KEY: z.string().optional(),
   PRETIUM_WEBHOOK_SECRET: z.string().optional(),
 
+  // Snaville (Tanzania)
+  SNAVILLE_API_KEY: z.string().optional(),
+  SNAVILLE_API_URL: z.string().default('https://api.snaville.com/v1/partner'),
+  SNAVILLE_WEBHOOK_SECRET: z.string().optional(),
+
   // Smile ID
   SMILE_ID_PARTNER_ID: z.string().optional(),
   SMILE_ID_API_KEY: z.string().optional(),
@@ -217,6 +222,11 @@ export const config = {
       baseUrl: env.PRETIUM_BASE_URL,
       apiKey: env.PRETIUM_API_KEY,
       webhookSecret: env.PRETIUM_WEBHOOK_SECRET,
+    },
+    snaville: {
+      apiKey: env.SNAVILLE_API_KEY,
+      apiUrl: env.SNAVILLE_API_URL,
+      webhookSecret: env.SNAVILLE_WEBHOOK_SECRET,
     },
     smileId: {
       partnerId: env.SMILE_ID_PARTNER_ID,
