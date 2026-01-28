@@ -58,6 +58,9 @@ export interface SnavilleBuyOrderRequest {
   user_full_name: string;
   user_phone: string;
   network: SnavilleNetwork;
+  user_email?: string;
+  idempotency_key?: string;
+  mismatch_policy?: 'auto_process' | 'require_exact';
 }
 
 export interface SnavillePaymentInstructions {

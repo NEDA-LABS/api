@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { contactsDocs } from './docs-contacts.js';
 
 const router = Router();
 
@@ -194,27 +195,41 @@ const css = `
   /* Code */
   code {
     background: var(--bg-tertiary);
-    padding: 0.2rem 0.5rem;
+    padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-size: 0.875em;
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
     color: var(--primary);
+    font-weight: 500;
   }
   pre {
     background: var(--code-bg);
     color: #e2e8f0;
-    padding: 1.25rem;
+    padding: 1.25rem 1.5rem;
     border-radius: 8px;
     overflow-x: auto;
     margin: 1rem 0;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     line-height: 1.7;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative;
   }
   pre code {
     background: transparent;
     color: inherit;
     padding: 0;
+    font-weight: 400;
+  }
+  pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    opacity: 0.5;
   }
   
   /* Endpoint Cards */
@@ -376,16 +391,35 @@ const css = `
   
   /* Badges */
   .badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    border: 1px solid;
   }
-  .badge.completed { background: #d1fae5; color: #065f46; }
-  .badge.pending { background: #fee2e2; color: #991b1b; }
+  .badge.completed { 
+    background: #d1fae5; 
+    color: #065f46; 
+    border-color: #10b981;
+  }
+  .badge.completed::before {
+    content: '✓';
+    font-size: 0.875rem;
+  }
+  .badge.pending { 
+    background: #fef3c7; 
+    color: #92400e; 
+    border-color: #f59e0b;
+  }
+  .badge.pending::before {
+    content: '⏳';
+    font-size: 0.875rem;
+  }
   
   /* Lists */
   ul { padding-left: 1.5rem; margin: 1rem 0; }
@@ -397,14 +431,39 @@ const css = `
   .alert {
     padding: 1rem 1.25rem;
     border-radius: 8px;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
     display: flex;
     align-items: start;
     gap: 0.75rem;
+    border: 1px solid;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
-  .alert-info { background: #dbeafe; border-left: 4px solid #3b82f6; color: #1e40af; }
-  .alert-warning { background: #fef3c7; border-left: 4px solid #f59e0b; color: #92400e; }
-  .alert-error { background: #fee2e2; border-left: 4px solid #ef4444; color: #991b1b; }
+  .alert > span:first-child {
+    font-size: 1.25rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .alert-info { 
+    background: #dbeafe; 
+    border-left: 4px solid #3b82f6; 
+    border-color: #93c5fd;
+    color: #1e40af; 
+  }
+  .alert-warning { 
+    background: #fef3c7; 
+    border-left: 4px solid #f59e0b; 
+    border-color: #fcd34d;
+    color: #92400e; 
+  }
+  .alert-error { 
+    background: #fee2e2; 
+    border-left: 4px solid #ef4444; 
+    border-color: #fca5a5;
+    color: #991b1b; 
+  }
+  .alert strong {
+    font-weight: 600;
+  }
   
   /* Responsive */
   @media (max-width: 1024px) {
@@ -1185,7 +1244,11 @@ router.get('/', (_req, res) => {
           <a href="#apps" class="nav-link">Apps & API Keys</a>
         </div>
         <div class="nav-section">
-          <div class="nav-section-title">Integrations</div>
+          <div class="nav-section-title">Core Features</div>
+          <a href="#contacts" class="nav-link">Contacts Management</a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Ramp Integrations</div>
           <a href="#paycrest" class="nav-link">Paycrest (Off-Ramp)</a>
           <a href="#pretium" class="nav-link">Pretium (On/Off-Ramp)</a>
           <a href="#idrx" class="nav-link">IDRX (Indonesia)</a>
@@ -1234,6 +1297,8 @@ router.get('/', (_req, res) => {
       <pre>Authorization: Bearer np_live_your_api_key_here</pre>
 
       ${appsDocs}
+
+      ${contactsDocs}
 
       ${paycrestDocs}
 

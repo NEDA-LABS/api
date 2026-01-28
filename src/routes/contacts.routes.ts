@@ -48,49 +48,6 @@ router.get('/', apiKeyAuth, async (req: Request, res: Response, next: NextFuncti
 });
 
 /**
- * POST /api/v1/contacts/search-users
- * Search for NedaPay users to link as contacts
- * NOTE: This must be before /:id route to avoid conflict
- */
-router.post('/search-users', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.user?.id;
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        error: { code: 'UNAUTHORIZED', message: 'Authentication required' }
-      });
-    }
-
-    const { query, type } = req.body;
-
-    if (!query || !type) {
-      return res.status(400).json({
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: 'query and type are required' }
-      });
-    }
-
-    if (!['wallet', 'email', 'name'].includes(type)) {
-      return res.status(400).json({
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: 'type must be wallet, email, or name' }
-      });
-    }
-
-    const users = await contactsService.searchUsers(query, type);
-
-    return res.json({
-      success: true,
-      users,
-    });
-  } catch (error) {
-    logger.error('Error searching users', { error });
-    return next(error);
-  }
-});
-
-/**
  * GET /api/v1/contacts/:id
  * Get a single contact by ID
  */
@@ -574,6 +531,48 @@ router.delete('/:id/crypto-addresses/:cryptoAddressId', apiKeyAuth, async (req: 
     });
   } catch (error) {
     logger.error('Error removing crypto address', { error, contactId: req.params.id });
+    return next(error);
+  }
+});
+
+/**
+ * POST /api/v1/contacts/search-users
+ * Search for NedaPay users to link as contacts
+ */
+router.post('/search-users', apiKeyAuth, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        error: { code: 'UNAUTHORIZED', message: 'Authentication required' }
+      });
+    }
+
+    const { query, type } = req.body;
+
+    if (!query || !type) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'VALIDATION_ERROR', message: 'query and type are required' }
+      });
+    }
+
+    if (!['wallet', 'email', 'name'].includes(type)) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'VALIDATION_ERROR', message: 'type must be wallet, email, or name' }
+      });
+    }
+
+    const users = await contactsService.searchUsers(query, type);
+
+    return res.json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    logger.error('Error searching users', { error });
     return next(error);
   }
 });

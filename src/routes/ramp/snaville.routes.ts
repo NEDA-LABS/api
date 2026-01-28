@@ -129,6 +129,8 @@ router.post('/onramp', async (req: Request, res: Response, next: NextFunction) =
       user_full_name,
       user_phone,
       network,
+      idempotency_key: partnerOrderId, // Use partner_order_id as idempotency key to prevent duplicates
+      mismatch_policy: 'auto_process', // Auto-process if user pays slightly more/less
     });
 
     if (!result.success) {
